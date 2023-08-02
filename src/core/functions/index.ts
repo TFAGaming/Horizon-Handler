@@ -25,7 +25,7 @@ export const importFromDir = async <T>(path: string, options?: { includesDir?: b
 
                             data.push(fileData);
 
-                            if (options?.onLoadedFile) options?.onLoadedFile(file, url);
+                            if (options?.onLoadedFile) console.log(options?.onLoadedFile(file, url));
                         };
                     };
                 };
@@ -43,7 +43,7 @@ export const importFromDir = async <T>(path: string, options?: { includesDir?: b
 
                         data.push(fileData);
 
-                        if (options?.onLoadedFile) options?.onLoadedFile(file, url);
+                        if (options?.onLoadedFile) console.log(options?.onLoadedFile(file, url));
                     };
                 };
             };
