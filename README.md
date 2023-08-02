@@ -25,7 +25,7 @@ pnpm add horizon-handler
 ## Example usage
 Tree of the project example:
 
-> **Note**: In `tsconfig.json`, make sure that the out directory is called "dist" for this example usage, you can change it anytime.
+> **Note**: In `tsconfig.json`, make sure that the out directory is called "dist" for this example usage, you can change it at anytime.
 
 ```
 Example Bot
@@ -46,8 +46,7 @@ Create a new Discord bot client: (`index.ts`)
 import { Client } from 'discord.js';
 
 const config = {
-    token: 'Your bot token',
-    id: 'Your bot ID'
+    token: 'Your bot token'
 };
 
 const client = new Client({
@@ -56,7 +55,7 @@ const client = new Client({
     ]
 });
 
-client.login('');
+client.login(config.token);
 ```
 
 Define a new commands & events handler and load all the files: (`index.ts`)
