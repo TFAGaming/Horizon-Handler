@@ -7,11 +7,23 @@ export class EventsHandler<C extends Client, K extends keyof ClientEvents> {
     public readonly path: string;
     public readonly includesDir?: boolean = false;
 
+    /**
+     * Creates a new handler for Discord bot client's events.
+     * 
+     * **Note**: This handler doesn't support custom events names, they all must be from the enum `ClientEvents`.
+     * @param {string} path The directory path.
+     * @param {boolean} includesDir Whenever the directory has sub-dirs or not. 
+     */
     constructor(path: string, includesDir?: boolean) {
         this.path = path;
         this.includesDir = includesDir;
     };
 
+    /**
+     * Creates a new event for the handler.
+     * 
+     * **Warning**: Make sure that you have exported it as `default`.
+     */
     public event = class <C extends Client, K extends keyof ClientEvents> {
         public readonly event: EventStructure<C, K>['event'];
         public readonly once?: EventStructure<C, K>['once'];
@@ -24,6 +36,10 @@ export class EventsHandler<C extends Client, K extends keyof ClientEvents> {
         };
     };
 
+    /**
+     * Loads all events from the provided path.
+     * @param {C} client The Discord bot client to listen to these events.
+     */
     public load(client: C): Promise<EventBuilder<C, K>[]> {
         return new Promise(async (resolved, rejected) => {
             try {

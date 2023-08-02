@@ -8,11 +8,22 @@ export class CommandsHandler<C extends Client, O = {}, A extends unknown = unkno
     public readonly path: string;
     public readonly includesDir?: boolean = false;
 
+    /**
+     * Creates a new handler for Discord bot client's events.
+     * @param {string} path The directory path.
+     * @param {boolean} includesDir Whenever the directory has sub-dirs or not.
+     */
     constructor(path: string, includesDir?: boolean) {
         this.path = path;
         this.includesDir = includesDir;
     };
 
+    /**
+     * Deploy application commands to Discord API using `REST` client.
+     * @param {Client<true>} client The Discord bot client, must be ready.
+     * @param {{ REST?: RESTOptions, guildId?: string }} options 
+     * @returns 
+     */
     public deploy(client: Client<true>, options?: { REST?: RESTOptions, guildId?: string }): Promise<REST> {
         return new Promise(async (resolved, rejected) => {
             try {
@@ -41,12 +52,19 @@ export class CommandsHandler<C extends Client, O = {}, A extends unknown = unkno
         });
     };
 
+    /**
+     * Creates a new command.
+     */
     public command = class extends CommandBuilder<C, O, A> {
         constructor(data: CommandStructure<C, O, A>) {
             super(data);
         };
     };
 
+    /**
+     * Loads all events from the provided path.
+     * @param {Collection<string, CommandStructure<C, O, A>>} collection The collection for listening and responding to application commands.
+     */
     public load(collection?: Collection<string, CommandStructure<C, O, A>>): Promise<Collection<string, CommandStructure<C, O, A>>> {
         return new Promise(async (resolved, rejected) => {
             try {
@@ -65,6 +83,10 @@ export class CommandsHandler<C extends Client, O = {}, A extends unknown = unkno
         });
     };
 
+    /**
+     * Reloads all events from the provided path.
+     * @param {Collection<string, CommandStructure<C, O, A>>} collection The collection to clear and to set a new data for listening and responding to application commands.
+     */
     public reload(collection?: Collection<string, CommandStructure<C, O, A>>): Promise<Collection<string, CommandStructure<C, O, A>>> {
         return new Promise(async (resolved, rejected) => {
             try {

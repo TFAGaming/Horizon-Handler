@@ -45,17 +45,13 @@ Create a new Discord bot client: (`index.ts`)
 ```ts
 import { Client } from 'discord.js';
 
-const config = {
-    token: 'Your bot token'
-};
-
 const client = new Client({
     intents: [
         'Guilds'
     ]
 });
 
-client.login(config.token);
+client.login('Your bot token goes here');
 ```
 
 Define a new commands & events handler and load all the files: (`index.ts`)
@@ -75,7 +71,7 @@ export const collection = new Collection<string, CommandStructure<Client>>();
 (async () => {
     await cmdshandler.load(collection);
 
-    await eventshandler.load();
+    await eventshandler.load(client);
 })();
 ```
 
@@ -104,7 +100,7 @@ Create a new event to log whenever the client is ready or not and deploy the app
 ```ts
 import { eventshandler, cmdshandler } from '../../index';
 
-export default eventshandler.event({
+export default new eventshandler.event({
     event: 'ready',
     once: true,
     run: (_, client) => {
@@ -121,7 +117,7 @@ Create a new event to handle application commands: (`interactionCreate.ts`)
 ```ts
 import { eventshandler, collection } from '../../index';
 
-export default eventshandler.event({
+export default new eventshandler.event({
     event: 'interactionCreate',
     run: (client, interaction) => {
         if (!interaction.isChatInputCommand()) return;
@@ -148,6 +144,12 @@ export default eventshandler.event({
 | O | { [k: **string**]: **any**; } | **{ }** | The custom options for commands. |
 | A | **any** | **unknown** | The custom arguments for the **run** property of each command. |
 
+### Constructor:
+| Parameter | Type | Default | Description |
+| -------- | -------- | -------- | -------- |
+| path | **string** | - | The path of the directory. |
+| includesDir? | **boolean** | **false** | Whenever the directory has sub-dirs or not. |
+
 ### Methods:
 | Method | Params | Returns | Async? | Description |
 | -------- | -------- | -------- | -------- | -------- |
@@ -168,6 +170,12 @@ export default eventshandler.event({
 | -------- | -------- | -------- | -------- |
 | C | **Client** | - | The Discord bot client. |
 | K | keyof **ClientEvents** | - | Key of client events from discord.js. |
+
+### Constructor:
+| Parameter | Type | Default | Description |
+| -------- | -------- | -------- | -------- |
+| path | **string** | - | The path of the directory. |
+| includesDir? | **boolean** | **false** | Whenever the directory has sub-dirs or not. |
 
 ### Methods:
 | Method | Params | Returns | Async? | Description |
