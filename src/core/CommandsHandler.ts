@@ -1,6 +1,6 @@
 import { Client, Collection, REST, RESTOptions, Routes } from "discord.js";
 import { CommandBuilder } from "./CommandBuilder";
-import { CommandStructure, CommandType } from "../types";
+import { CommandStructure } from "../types";
 import { importFromDir } from "./functions";
 
 export class CommandsHandler<C extends Client, O = {}, A extends unknown = unknown> {
@@ -64,11 +64,15 @@ export class CommandsHandler<C extends Client, O = {}, A extends unknown = unkno
     /**
      * Loads all events from the provided path.
      * @param {Collection<string, CommandStructure<C, O, A>>} collection The collection for listening and responding to application commands.
+     * @param {(file: string, path: string) => string} consolemessage The message to log in console when a file is loaded.
      */
-    public load(collection?: Collection<string, CommandStructure<C, O, A>>): Promise<Collection<string, CommandStructure<C, O, A>>> {
+    public load(collection?: Collection<string, CommandStructure<C, O, A>>, consolemessage?: (file: string, path: string) => string): Promise<Collection<string, CommandStructure<C, O, A>>> {
         return new Promise(async (resolved, rejected) => {
             try {
-                const data: CommandStructure<C, O, A>[] = await importFromDir(this.path, this.includesDir);
+                const data: CommandStructure<C, O, A>[] = await importFromDir(this.path, {
+                    includesDir: this.includesDir,
+                    onLoadedFile: consolemessage
+                });
 
                 for (const command of data) {
                     this.collection.set(command.structure.name, command);

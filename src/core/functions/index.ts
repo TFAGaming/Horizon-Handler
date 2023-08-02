@@ -1,12 +1,12 @@
 import { join, extname, resolve } from 'path';
 import { promises as fspromises } from 'fs';
 
-export const importFromDir = async <T>(path: string, includesDir?: boolean) => {
+export const importFromDir = async <T>(path: string, options?: { includesDir?: boolean, onLoadedFile?: (file: string, path: string) => string }) => {
     const data: T[] = [];
 
     const main = async (directoryPath: string) => {
         try {
-            if (includesDir) {
+            if (options?.includesDir) {
                 const files = await fspromises.readdir(directoryPath);
 
                 for (const file of files) {
@@ -21,11 +21,11 @@ export const importFromDir = async <T>(path: string, includesDir?: boolean) => {
                         if (fileExtension === '.js' || fileExtension === '.cjs') {
                             const url = resolve("./", `${filePath}${filePath.endsWith("/") ? "" : "/"}`);
 
-                            console.log(url)
-
                             const fileData = require(url).default;
 
                             data.push(fileData);
+
+                            if (options?.onLoadedFile) options?.onLoadedFile(file, url);
                         };
                     };
                 };
@@ -39,11 +39,11 @@ export const importFromDir = async <T>(path: string, includesDir?: boolean) => {
                     if (fileExtension === '.js' || fileExtension === '.cjs') {
                         const url = resolve("./", `${filePath}${filePath.endsWith("/") ? "" : "/"}`);
 
-                        console.log(url)
-
                         const fileData = require(url).default;
 
                         data.push(fileData);
+
+                        if (options?.onLoadedFile) options?.onLoadedFile(file, url);
                     };
                 };
             };

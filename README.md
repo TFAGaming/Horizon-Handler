@@ -19,6 +19,8 @@ pnpm add horizon-handler
 - [Guide](#guide)
     - [Class: CommandsHandler](#class-commandshandler)
     - [Class: EventsHandler](#class-eventshandler)
+- [Examples](#examples)
+    - [Using custom options for commands](#using-custom-options-for-commands)
 - [Support](#support)
 - [License](#license)
 
@@ -81,7 +83,7 @@ Create a new simple command: (`ping.ts`)
 import { CommandType } from 'horizon-handler';
 import { cmdshandler } from '../../index';
 
-export default cmdshandler.command({
+export default new cmdshandler.command({
     type: CommandType.ChatInput,
     structure: {
         name: 'ping',
@@ -154,7 +156,7 @@ export default new eventshandler.event({
 | Method | Params | Returns | Async? | Description |
 | -------- | -------- | -------- | -------- | -------- |
 | deploy | client: **Client**, options?: **object** | **Promise** **REST** | Yes | Load all application commands to Discord API. |
-| load | collection?: **Collection** | **Promise** **Collection** | Yes | Load all commands from the provided path. |
+| load | collection?: **Collection**, consolemessage?: **(file: string, path: string) => string** | **Promise** **Collection** | Yes | Load all commands from the provided path. |
 | reload | collection?: **Collection** | **Promise** **Collection** | Yes | Clears the collection, and then reload all commands from the provided path. |
 
 ### Properties:
@@ -180,13 +182,27 @@ export default new eventshandler.event({
 ### Methods:
 | Method | Params | Returns | Async? | Description |
 | -------- | -------- | -------- | -------- | -------- |
-| load | collection?: **Collection** | **Promise** **Collection** | Yes | Load all events from the provided path. |
+| load | client: **Client**, consolemessage?: **(file: string, path: string) => string** | **Promise** **Collection** | Yes | Load all events from the provided path. |
 
 ### Properties:
 | Property | Readonly? | Type | Default value |
 | -------- | -------- | -------- | -------- |
 | path | Yes | **string** | - |
 | includesDir? | Yes | **boolean** | undefined |
+
+## Examples
+### Using custom options for commands
+```ts
+interface Options {
+    option1: string,
+    option2: number,
+    option3: (string | number)[],
+    option4: (...args: any[]) => void,
+    option5: { suboption: string }
+};
+
+new CommandsHandler<Client, Options>(...);
+```
 
 ## Support
 Need any help? Join our Discord server, report to us the problem, and we will solve it for you!

@@ -28,22 +28,26 @@ export class EventsHandler<C extends Client, K extends keyof ClientEvents> {
         public readonly event: EventStructure<C, K>['event'];
         public readonly once?: EventStructure<C, K>['once'];
         public readonly run: EventStructure<C, K>['run'];
-        
+
         constructor(data: EventStructure<C, K>) {
             this.event = data.event;
             this.once = data.once;
-            this.run = data.run; 
+            this.run = data.run;
         };
     };
 
     /**
      * Loads all events from the provided path.
      * @param {C} client The Discord bot client to listen to these events.
+     * @param {(file: string, path: string) => string} consolemessage The message to log in console when a file is loaded.
      */
-    public load(client: C): Promise<EventBuilder<C, K>[]> {
+    public load(client: C, consolemessage?: (file: string, path: string) => string): Promise<EventBuilder<C, K>[]> {
         return new Promise(async (resolved, rejected) => {
             try {
-                const data: EventBuilder<C, K>[] = await importFromDir(this.path, this.includesDir);
+                const data: EventBuilder<C, K>[] = await importFromDir(this.path, {
+                    includesDir: this.includesDir,
+                    onLoadedFile: consolemessage
+                });
 
                 for (const module of data) {
                     if (module.once) {
