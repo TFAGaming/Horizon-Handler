@@ -9,7 +9,11 @@
     "build": "tsc"
   },
   "keywords": [],
-  "author": "",
+  "author": "TFAGaming",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TFAGaming/Horizon-Handler.git"
+  },
   "license": "MIT",
   "dependencies": {
     "discord.js": "^14.12.1"
