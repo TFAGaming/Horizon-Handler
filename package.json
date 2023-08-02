@@ -1,5 +1,5 @@
 {
-  "name": "@tfagaming/handler",
+  "name": "horizon-handler",
   "version": "1.0.0",
   "description": "A powerful Discord bot commands and events handler, fully written in TypeScript and has many typings features.",
   "main": "lib/index.js",
