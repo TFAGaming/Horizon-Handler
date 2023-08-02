@@ -19,6 +19,8 @@ pnpm add horizon-handler
 - [Guide](#guide)
     - [Class: CommandsHandler](#class-commandshandler)
     - [Class: EventsHandler](#class-eventshandler)
+- [Support](#support)
+- [License](#license)
 
 ## Example usage
 Tree of the project example:
