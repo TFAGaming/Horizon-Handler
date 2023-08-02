@@ -1,7 +1,7 @@
 {
   "name": "@tfagaming/handler",
   "version": "1.0.0",
-  "description": "",
+  "description": "A powerful Discord bot commands and events handler, fully written in TypeScript and has many typings features.",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "scripts": {
