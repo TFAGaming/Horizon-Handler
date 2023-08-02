@@ -1,0 +1,17 @@
+{
+  "name": "@tfagaming/handler",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "scripts": {
+    "test": "tsc && node .",
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^14.12.1"
+  }
+}
