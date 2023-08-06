@@ -3,7 +3,7 @@ import { CustomEventStructure, EventStructure, EventsHandlerEvents } from "./typ
 import { EventBuilder } from "./EventBuilder";
 import { EventEmitter } from 'events';
 
-export declare class EventsHandler<C extends Client, K extends keyof ClientEvents, I extends { [k: string]: any[] }> extends EventEmitter {
+export declare class EventsHandler<C extends Client, K extends keyof ClientEvents = keyof ClientEvents, I extends { [k: string]: any[] } = { }> extends EventEmitter {
     readonly path: string;
     readonly includesDir?: boolean;
 
@@ -30,7 +30,7 @@ export declare class EventsHandler<C extends Client, K extends keyof ClientEvent
      * ```
      */
     event: {
-        new (data: EventStructure<C, K>): {
+        new <K extends keyof ClientEvents> (data: EventStructure<C, K>): {
             readonly event: K;
             readonly once?: boolean | undefined;
             readonly run: (client: C, ...args: ClientEvents[K]) => void;

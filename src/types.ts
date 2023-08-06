@@ -11,7 +11,7 @@ import {
 } from "discord.js";
 
 // Commands Handler
-export declare enum CommandType {
+export enum CommandType {
     ChatInput = 1,
     UserContext = 2,
     MessageContext = 3

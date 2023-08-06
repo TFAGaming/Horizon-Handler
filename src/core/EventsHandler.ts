@@ -4,7 +4,7 @@ import { importFromDir } from "./functions";
 import { EventBuilder } from "./EventBuilder";
 import { EventEmitter } from 'events';
 
-export class EventsHandler<C extends Client, K extends keyof ClientEvents, I extends { [k: string]: any[] }> extends EventEmitter {
+export class EventsHandler<C extends Client, K extends keyof ClientEvents = keyof ClientEvents, I extends { [k: string]: any[] } = { }> extends EventEmitter {
     public readonly path: string;
     public readonly includesDir?: boolean = false;
 
@@ -35,7 +35,7 @@ export class EventsHandler<C extends Client, K extends keyof ClientEvents, I ext
      * module.exports = new [handler].event(...);
      * ```
      */
-    public event = class <C extends Client, K extends keyof ClientEvents> {
+    public event = class <K extends keyof ClientEvents> {
         public readonly event: EventStructure<C, K>['event'];
         public readonly once?: EventStructure<C, K>['once'];
         public readonly run: EventStructure<C, K>['run'];

@@ -1,11 +1,17 @@
 # Horizon Handler
 A powerful Discord bot commands and events handler, fully written in TypeScript and has many typings features. Horizon Handler provides simple Discord application commands handler, supports custom options and custom arguments for listeners.
 
+## Features
+- Supports all type of application commands on Discord: **Chat Input** (Slash), **User context**, and **Message context**.
+- Built-in files handler, loads sub-dirs if enabled.
+- **99.9%** Promise-based.
+- Easy and simple to use.
+
 ## Install
 ### Requirements
-- Node.js v^16.9.0
-- discord.js v^14.12.0
-- typescript v^5.1.0
+- **Node.js** v^16.9.0
+- **discord.js** v^14.12.0
+- **typescript** v^5.1.0 (required if you're using TypeScript)
 
 After you meet all the requirements, you can install the package.
 
@@ -18,6 +24,7 @@ pnpm add horizon-handler
 ## Table of Contents
 
 - [Horizon Handler](#horizon-handler)
+- [Features](#features)
 - [Install](#install)
     - [Requiremens](#requirements)
 - [Table of Contents](#table-of-contents)
@@ -25,6 +32,7 @@ pnpm add horizon-handler
 - [Guide](#guide)
     - [Class: CommandsHandler](#class-commandshandler)
     - [Class: EventsHandler](#class-eventshandler)
+    - [Enum: CommandType](#enum-commandtype)
 - [Examples](#examples)
     - [Using custom options for commands](#using-custom-options-for-commands)
     - [Custom events for Discord bot Client](#custom-events-for-discord-bot-client)
@@ -73,7 +81,11 @@ import {
 
 export const cmdshandler = new CommandsHandler<Client>('./dist/commands/', true);
 
+cmdshandler.on('fileLoad', (command) => console.log(`Loaded new command: ` + command.name));
+
 export const eventshandler = new EventsHandler<Client>('./dist/events/');
+
+eventshandler.on('fileLoad', (event) => console.log(`Loaded new event: ` + event));
 
 export const collection = new Collection<string, CommandStructure<Client>>();
 
@@ -87,15 +99,15 @@ export const collection = new Collection<string, CommandStructure<Client>>();
 Create a new simple command: (`ping.ts`)
 
 ```ts
+import { SlashCommandBuilder } from 'discord.js';
 import { CommandType } from 'horizon-handler';
 import { cmdshandler } from '../../index';
 
 export default new cmdshandler.command({
     type: CommandType.ChatInput,
-    structure: {
-        name: 'ping',
-        description: 'Replies with pong!'
-    },
+    structure: new SlashCommandBuilder()
+        .setName('ping')
+        .setDescription('Replies with Pong!'),
     run: async (client, interaction) => {
         await interaction.reply({
             content: 'Pong!'
@@ -112,8 +124,8 @@ import { eventshandler, cmdshandler } from '../../index';
 export default new eventshandler.event({
     event: 'ready',
     once: true,
-    run: (_, client) => {
-        console.log(`Logged in as: ` + client.user.displayName)
+    run: async (_, client) => {
+        console.log(`Logged in as: ` + client.user.displayName);
 
         // The client must be ready to deploy application commands to Discord API.
         await cmdshandler.deploy(client);
@@ -155,20 +167,20 @@ export default new eventshandler.event({
 | O | { [k: **string**]: **any**; } | **{ }** | The custom options for commands. |
 | A | **any** | **unknown** | The custom arguments for the **run** property of each command. |
 
-### Constructor:
+#### Constructor:
 | Parameter | Type | Default | Description |
 | -------- | -------- | -------- | -------- |
 | path | **string** | - | The path of the directory. |
 | includesDir? | **boolean** | **false** | Whenever the directory has sub-dirs or not. |
 
-### Methods:
+#### Methods:
 | Method | Params | Returns | Async? | Description |
 | -------- | -------- | -------- | -------- | -------- |
 | deploy | client: **Client**, options?: **object** | **Promise** **REST** | Yes | Load all application commands to Discord API. |
 | load | collection?: **Collection**, consolemessage?: **(file: string, path: string) => string** | **Promise** **Collection** | Yes | Load all commands from the provided path. |
 | reload | collection?: **Collection** | **Promise** **Collection** | Yes | Clears the collection, and then reload all commands from the provided path. |
 
-### Properties:
+#### Properties:
 | Property | Readonly? | Type | Default value |
 | -------- | -------- | -------- | -------- |
 | collection | Yes | **Collection** | Collection(0) [Map] {} |
@@ -185,22 +197,31 @@ export default new eventshandler.event({
 | K | keyof **ClientEvents** | - | Key of client events from discord.js. |
 | I | { [k: **string**]: **any**[] } | - | The custom events if needed. |
 
-### Constructor:
+#### Constructor:
 | Parameter | Type | Default | Description |
 | -------- | -------- | -------- | -------- |
 | path | **string** | - | The path of the directory. |
 | includesDir? | **boolean** | **false** | Whenever the directory has sub-dirs or not. |
 
-### Methods:
+#### Methods:
 | Method | Params | Returns | Async? | Description |
 | -------- | -------- | -------- | -------- | -------- |
 | load | client: **Client** | **Promise** **Collection** | Yes | Load all events from the provided path. |
 
-### Properties:
+#### Properties:
 | Property | Readonly? | Type | Default value |
 | -------- | -------- | -------- | -------- |
 | path | Yes | **string** | - |
 | includesDir? | Yes | **boolean** | undefined |
+
+[↑ Table of Contents](#table-of-contents)
+
+### Enum: CommandType
+| Property | Type | Returns |
+| -------- | -------- | -------- |
+| ChatInput | **number** | 1 |
+| UserContext | **number** | 2 |
+| MessageContext | **number** | 3 |
 
 [↑ Table of Contents](#table-of-contents)
 
