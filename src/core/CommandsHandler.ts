@@ -2,8 +2,9 @@ import { Client, Collection, REST, RESTOptions, Routes } from "discord.js";
 import { CommandBuilder } from "./CommandBuilder";
 import { CommandStructure } from "../types";
 import { importFromDir } from "./functions";
+import { EventEmitter } from 'events';
 
-export class CommandsHandler<C extends Client, O = {}, A extends unknown = unknown> {
+export class CommandsHandler<C extends Client, O = {}, A extends unknown = unknown> extends EventEmitter {
     public readonly collection: Collection<string, CommandStructure<C, O, A>> = new Collection();
     public readonly path: string;
     public readonly includesDir?: boolean = false;
@@ -11,9 +12,11 @@ export class CommandsHandler<C extends Client, O = {}, A extends unknown = unkno
     /**
      * Creates a new handler for Discord bot client's events.
      * @param {string} path The directory path.
-     * @param {boolean} includesDir Whenever the directory has sub-dirs or not.
+     * @param {boolean | undefined} includesDir Whenever the directory has sub-dirs or not.
      */
     constructor(path: string, includesDir?: boolean) {
+        super({ captureRejections: false });
+
         this.path = path;
         this.includesDir = includesDir;
     };
@@ -29,6 +32,8 @@ export class CommandsHandler<C extends Client, O = {}, A extends unknown = unkno
             try {
                 const rest = new REST(options?.REST).setToken(client.token);
 
+                this.emit('deployStart');
+
                 if (options?.guildId && client.guilds.cache.get(options.guildId)) {
                     await rest.put(
                         Routes.applicationGuildCommands(client.user.id, options.guildId),
@@ -36,6 +41,8 @@ export class CommandsHandler<C extends Client, O = {}, A extends unknown = unkno
                             body: [...this.collection.values()].map((command) => command.structure)
                         }
                     );
+
+                    this.emit('deployFinish');
                 } else {
                     await rest.put(
                         Routes.applicationCommands(client.user.id),
@@ -47,6 +54,8 @@ export class CommandsHandler<C extends Client, O = {}, A extends unknown = unkno
 
                 resolved(rest);
             } catch (e) {
+                this.emit('deployError', e);
+
                 rejected(e);
             };
         });
@@ -54,6 +63,16 @@ export class CommandsHandler<C extends Client, O = {}, A extends unknown = unkno
 
     /**
      * Creates a new command.
+     * 
+     * **Warning**: Make sure that you have exported it as `default`.
+     * 
+     * ```ts
+     * // TypeScript
+     * export default new [handler].command(...);
+     * 
+     * // JavaScript (CommonJS)
+     * module.exports = new [handler].command(...);
+     * ```
      */
     public command = class extends CommandBuilder<C, O, A> {
         constructor(data: CommandStructure<C, O, A>) {
@@ -64,20 +83,26 @@ export class CommandsHandler<C extends Client, O = {}, A extends unknown = unkno
     /**
      * Loads all events from the provided path.
      * @param {Collection<string, CommandStructure<C, O, A>>} collection The collection for listening and responding to application commands.
-     * @param {(file: string, path: string) => string} consolemessage The message to log in console when a file is loaded.
      */
-    public load(collection?: Collection<string, CommandStructure<C, O, A>>, consolemessage?: (file: string, path: string) => string): Promise<Collection<string, CommandStructure<C, O, A>>> {
+    public load(collection?: Collection<string, CommandStructure<C, O, A>>): Promise<Collection<string, CommandStructure<C, O, A>>> {
         return new Promise(async (resolved, rejected) => {
             try {
                 const data: CommandStructure<C, O, A>[] = await importFromDir(this.path, {
-                    includesDir: this.includesDir,
-                    onLoadedFile: consolemessage
+                    includesDir: this.includesDir
                 });
 
                 for (const command of data) {
+                    if (!command.structure || !command.run || !command.type) {
+                        this.emit('fileSkip', command.structure);
+
+                        continue;
+                    };
+
                     this.collection.set(command.structure.name, command);
 
                     if (collection) collection.set(command.structure.name, command);
+
+                    this.emit('fileLoad', command.structure);
                 };
 
                 resolved(this.collection);

@@ -2,9 +2,14 @@
 A powerful Discord bot commands and events handler, fully written in TypeScript and has many typings features. Horizon Handler provides simple Discord application commands handler, supports custom options and custom arguments for listeners.
 
 ## Install
-You need **Node.js v16.9.0** or above, including **discord.js v14.11.0** or above.
+### Requirements
+- Node.js v^16.9.0
+- discord.js v^14.12.0
+- typescript v^5.1.0
 
-```
+After you meet all the requirements, you can install the package.
+
+```sh-session
 npm install horizon-handler
 yarn add horizon-handler
 pnpm add horizon-handler
@@ -14,6 +19,7 @@ pnpm add horizon-handler
 
 - [Horizon Handler](#horizon-handler)
 - [Install](#install)
+    - [Requiremens](#requirements)
 - [Table of Contents](#table-of-contents)
 - [Example usage](#example-usage)
 - [Guide](#guide)
@@ -21,6 +27,7 @@ pnpm add horizon-handler
     - [Class: EventsHandler](#class-eventshandler)
 - [Examples](#examples)
     - [Using custom options for commands](#using-custom-options-for-commands)
+    - [Custom events for Discord bot Client](#custom-events-for-discord-bot-client)
 - [Support](#support)
 - [License](#license)
 
@@ -137,8 +144,10 @@ export default new eventshandler.event({
 });
 ```
 
+[↑ Table of Contents](#table-of-contents)
+
 ## Guide
-### Class: CommandsHandler
+### Class: CommandsHandler (extends `EventEmitter`)
 #### Type parameters:
 | Parameter | Type | Default | Description |
 | -------- | -------- | -------- | -------- |
@@ -166,12 +175,15 @@ export default new eventshandler.event({
 | path | Yes | **string** | - |
 | includesDir? | Yes | **boolean** | undefined |
 
-### Class: EventsHandler
+[↑ Table of Contents](#table-of-contents)
+
+### Class: EventsHandler (extends `EventEmitter`)
 #### Type parameters:
 | Parameter | Type | Default | Description |
 | -------- | -------- | -------- | -------- |
 | C | **Client** | - | The Discord bot client. |
 | K | keyof **ClientEvents** | - | Key of client events from discord.js. |
+| I | { [k: **string**]: **any**[] } | - | The custom events if needed. |
 
 ### Constructor:
 | Parameter | Type | Default | Description |
@@ -182,7 +194,7 @@ export default new eventshandler.event({
 ### Methods:
 | Method | Params | Returns | Async? | Description |
 | -------- | -------- | -------- | -------- | -------- |
-| load | client: **Client**, consolemessage?: **(file: string, path: string) => string** | **Promise** **Collection** | Yes | Load all events from the provided path. |
+| load | client: **Client** | **Promise** **Collection** | Yes | Load all events from the provided path. |
 
 ### Properties:
 | Property | Readonly? | Type | Default value |
@@ -190,8 +202,10 @@ export default new eventshandler.event({
 | path | Yes | **string** | - |
 | includesDir? | Yes | **boolean** | undefined |
 
+[↑ Table of Contents](#table-of-contents)
+
 ## Examples
-### Using custom options for commands
+### Using custom options for commands:
 ```ts
 interface Options {
     option1: string,
@@ -204,12 +218,25 @@ interface Options {
 new CommandsHandler<Client, Options>(...);
 ```
 
+### Custom events for Discord bot Client:
+```ts
+new EventsHandler
+    <Client, { key: [value: string, ...], ... }>
+    (...);
+
+export default new [handler].customevent(...);
+```
+
+[↑ Table of Contents](#table-of-contents)
+
 ## Support
 Need any help? Join our Discord server, report to us the problem, and we will solve it for you!
 
 <a href="https://discord.gg/E6VFACWu5V">
     <img src="https://discord.com/api/guilds/918611797194465280/widget.png?style=banner3">
 </a>
+
+[↑ Table of Contents](#table-of-contents)
 
 ## License
 The **MIT** License.
