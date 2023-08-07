@@ -10,8 +10,8 @@ A powerful Discord bot commands and events handler, fully written in TypeScript 
 ## Install
 ### Requirements
 - **Node.js** v^16.9.0
-- **discord.js** v^14.12.0
-- **typescript** v^5.1.0 (required if you're using TypeScript)
+- [discord.js](https://npmjs.com/package/discord.js) v^14.12.0
+- [typescript](https://npmjs.com/package/typescript) v^5.1.6 (**required** if you're using TypeScript)
 
 After you meet all the requirements, you can install the package.
 
@@ -39,10 +39,16 @@ pnpm add horizon-handler
 - [Support](#support)
 - [License](#license)
 
-## Example usage
-Tree of the project example:
+## Usage
 
-> **Note**: In `tsconfig.json`, make sure that the out directory is called "dist" for this example usage, you can change it at anytime.
+Choose which language you want to try:
+
+<!-- TYPESCRIPT EXAMPLE -->
+
+<details>
+  <summary>TypeScript example </summary>
+
+### Tree of the project example:
 
 ```
 Example Bot
@@ -58,7 +64,29 @@ Example Bot
 └─── tsconfig.json
 ```
 
-Create a new Discord bot client: (`index.ts`)
+### tsconfig.json compiler options
+
+> **Note**: For this example, the out directory name is **dist**. You can change it at anytime, but make sure that the path directory names are also renamed to the new one for **CommandsHandler** and **EventsHandler** classes.
+
+```json
+{
+    "compilerOptions": {
+        "target": "ES2020",
+        "module": "CommonJS",
+        "outDir": "dist",
+        "strict": true,
+    },
+    "include": [
+        "src"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist"
+    ]
+}
+```
+
+### Create a new Discord bot client: (`index.ts`)
 ```ts
 import { Client } from 'discord.js';
 
@@ -71,7 +99,7 @@ const client = new Client({
 client.login('Your bot token goes here');
 ```
 
-Define a new commands & events handler and load all the files: (`index.ts`)
+### Define a new commands & events handler and load all the files: (`index.ts`)
 ```ts
 import {
     CommandsHandler,
@@ -96,7 +124,7 @@ export const collection = new Collection<string, CommandStructure<Client>>();
 })();
 ```
 
-Create a new simple command: (`ping.ts`)
+### Create a new simple command: (`ping.ts`)
 
 ```ts
 import { SlashCommandBuilder } from 'discord.js';
@@ -116,7 +144,7 @@ export default new cmdshandler.command({
 });
 ```
 
-Create a new event to log whenever the client is ready or not and deploy the application commands to Discord API: (`ready.ts`)
+### Create a new event to log whenever the client is ready or not and deploy the application commands to Discord API: (`ready.ts`)
 
 ```ts
 import { eventshandler, cmdshandler } from '../../index';
@@ -127,13 +155,12 @@ export default new eventshandler.event({
     run: async (_, client) => {
         console.log(`Logged in as: ` + client.user.displayName);
 
-        // The client must be ready to deploy application commands to Discord API.
         await cmdshandler.deploy(client);
     }
 });
 ```
 
-Create a new event to handle application commands: (`interactionCreate.ts`)
+### Create a new event to handle application commands: (`interactionCreate.ts`)
 
 ```ts
 import { eventshandler, collection } from '../../index';
@@ -156,6 +183,132 @@ export default new eventshandler.event({
 });
 ```
 
+[↑ Go back to Usage](#usage)
+
+</details>
+
+<!-- JAVASCRIPT EXAMPLE -->
+
+<details>
+  <summary>JavaScript example </summary>
+
+### Tree of the project example:
+
+```
+Example Bot
+├─── src
+│    ├─── index.js
+│    ├─── events
+│    │   └─── ready.js
+│    │   └─── interactionCreate.js
+│    └─── commands
+│         └─── Utility
+│              └─── ping.js
+└─── package.json
+```
+
+### Create a new Discord bot client: (`index.js`)
+```ts
+const { Client } = require('discord.js');
+
+const client = new Client({
+    intents: [
+        'Guilds'
+    ]
+});
+
+client.login('Your bot token goes here');
+```
+
+### Define a new commands & events handler and load all the files: (`index.js`)
+```ts
+const {
+    CommandsHandler,
+    EventsHandler
+} = require('horizon-handler');
+
+const cmdshandler = new CommandsHandler('./dist/commands/', true);
+
+cmdshandler.on('fileLoad', (command) => console.log(`Loaded new command: ` + command.name));
+
+const eventshandler = new EventsHandler('./dist/events/');
+
+eventshandler.on('fileLoad', (event) => console.log(`Loaded new event: ` + event));
+
+const collection = new Collection();
+
+module.exports = { cmdshandler, eventshandler, collection };
+
+(async () => {
+    await cmdshandler.load(collection);
+
+    await eventshandler.load(client);
+})();
+```
+
+### Create a new simple command: (`ping.js`)
+
+```ts
+const { SlashCommandBuilder } = require('discord.js');
+const { CommandType } = require('horizon-handler');
+const { cmdshandler } = require('../../index');
+
+module.exports = new cmdshandler.command({
+    type: CommandType.ChatInput,
+    structure: new SlashCommandBuilder()
+        .setName('ping')
+        .setDescription('Replies with Pong!'),
+    run: async (client, interaction) => {
+        await interaction.reply({
+            content: 'Pong!'
+        });
+    }
+});
+```
+
+### Create a new event to log whenever the client is ready or not and deploy the application commands to Discord API: (`ready.js`)
+
+```ts
+const { eventshandler, cmdshandler } = require('../../index');
+
+module.exports = new eventshandler.event({
+    event: 'ready',
+    once: true,
+    run: async (_, client) => {
+        console.log(`Logged in as: ` + client.user.displayName);
+
+        await cmdshandler.deploy(client);
+    }
+});
+```
+
+### Create a new event to handle application commands: (`interactionCreate.js`)
+
+```ts
+const { eventshandler, collection } = require('../../index');
+
+module.exports = new eventshandler.event({
+    event: 'interactionCreate',
+    run: (client, interaction) => {
+        if (!interaction.isChatInputCommand()) return;
+
+        const command = collection.get(interaction.commandName);
+
+        if (!command || command.type !== 1) return;
+
+        try {
+            command.run(client, interaction);
+        } catch (e) {
+            console.error(e);
+        };
+    }
+});
+```
+
+[↑ Go back to Usage](#usage)
+
+</details>
+
 [↑ Table of Contents](#table-of-contents)
 
 ## Guide
@@ -164,7 +317,7 @@ export default new eventshandler.event({
 | Parameter | Type | Default | Description |
 | -------- | -------- | -------- | -------- |
 | C | **Client** | - | The Discord bot client. |
-| O | { [k: **string**]: **any**; } | **{ }** | The custom options for commands. |
+| O | { [k: **string**]: **any** } | **{ }** | The custom options for commands. |
 | A | **any** | **unknown** | The custom arguments for the **run** property of each command. |
 
 #### Constructor:
@@ -177,7 +330,7 @@ export default new eventshandler.event({
 | Method | Params | Returns | Async? | Description |
 | -------- | -------- | -------- | -------- | -------- |
 | deploy | client: **Client**, options?: **object** | **Promise** **REST** | Yes | Load all application commands to Discord API. |
-| load | collection?: **Collection**, consolemessage?: **(file: string, path: string) => string** | **Promise** **Collection** | Yes | Load all commands from the provided path. |
+| load | collection?: **Collection** | **Promise** **Collection** | Yes | Load all commands from the provided path. |
 | reload | collection?: **Collection** | **Promise** **Collection** | Yes | Clears the collection, and then reload all commands from the provided path. |
 
 #### Properties:
@@ -185,7 +338,7 @@ export default new eventshandler.event({
 | -------- | -------- | -------- | -------- |
 | collection | Yes | **Collection** | Collection(0) [Map] {} |
 | path | Yes | **string** | - |
-| includesDir? | Yes | **boolean** | undefined |
+| includesDir? | Yes | **boolean** | **undefined** |
 
 [↑ Table of Contents](#table-of-contents)
 
@@ -212,7 +365,7 @@ export default new eventshandler.event({
 | Property | Readonly? | Type | Default value |
 | -------- | -------- | -------- | -------- |
 | path | Yes | **string** | - |
-| includesDir? | Yes | **boolean** | undefined |
+| includesDir? | Yes | **boolean** | **undefined** |
 
 [↑ Table of Contents](#table-of-contents)
 
@@ -242,7 +395,11 @@ new CommandsHandler<Client, Options>(...);
 ### Custom events for Discord bot Client:
 ```ts
 new EventsHandler
-    <Client, { key: [value: string, ...], ... }>
+    <
+        Client,
+        keyof ClientEvents
+        { key: [value: string, ...], ... } // ← Here
+    >
     (...);
 
 export default new [handler].customevent(...);

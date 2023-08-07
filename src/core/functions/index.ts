@@ -1,7 +1,7 @@
 import { join, extname, resolve } from 'path';
 import { promises as fspromises } from 'fs';
 
-export const importFromDir = async <T>(path: string, options?: { includesDir?: boolean, onLoadedFile?: (file: string, path: string) => string }) => {
+export const importFromDir = async <T>(path: string, options?: { includesDir?: boolean }) => {
     const data: T[] = [];
 
     const main = async (directoryPath: string) => {
@@ -24,8 +24,6 @@ export const importFromDir = async <T>(path: string, options?: { includesDir?: b
                             const fileData = require(url);
 
                             data.push(fileData?.default ? fileData.default : fileData);
-
-                            if (options?.onLoadedFile) console.log(options?.onLoadedFile(file, url));
                         };
                     };
                 };
@@ -42,8 +40,6 @@ export const importFromDir = async <T>(path: string, options?: { includesDir?: b
                         const fileData = require(url);
 
                         data.push(fileData?.default ? fileData.default : fileData);
-
-                        if (options?.onLoadedFile) console.log(options?.onLoadedFile(file, url));
                     };
                 };
             };
