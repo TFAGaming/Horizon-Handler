@@ -50,6 +50,8 @@ export class CommandsHandler<C extends Client, O = {}, A extends unknown = unkno
                             body: [...this.collection.values()].map((command) => command.structure)
                         }
                     );
+
+                    this.emit('deployFinish');
                 };
 
                 resolved(rest);

@@ -1,5 +1,5 @@
 # Horizon Handler
-A powerful Discord bot commands and events handler, fully written in TypeScript and has many typings features. Horizon Handler provides simple Discord application commands handler, supports custom options and custom arguments for listeners.
+A powerful Discord bot commands, events, and components handler, fully written in TypeScript and has many typings features. Horizon Handler provides simple Discord application commands handler, supports custom options and custom arguments for listeners.
 
 ## Features
 - Supports all type of application commands on Discord: **Chat Input** (Slash), **User context**, and **Message context**.
@@ -30,9 +30,6 @@ pnpm add horizon-handler
 - [Table of Contents](#table-of-contents)
 - [Example usage](#example-usage)
 - [Guide](#guide)
-    - [Class: CommandsHandler](#class-commandshandler)
-    - [Class: EventsHandler](#class-eventshandler)
-    - [Enum: CommandType](#enum-commandtype)
 - [Examples](#examples)
     - [Using custom options for commands](#using-custom-options-for-commands)
     - [Custom events for Discord bot Client](#custom-events-for-discord-bot-client)
@@ -312,6 +309,9 @@ module.exports = new eventshandler.event({
 [↑ Table of Contents](#table-of-contents)
 
 ## Guide
+<details>
+  <summary>Class: CommandsHandler </summary>
+
 ### Class: CommandsHandler (extends `EventEmitter`)
 #### Type parameters:
 | Parameter | Type | Default | Description |
@@ -340,7 +340,12 @@ module.exports = new eventshandler.event({
 | path | Yes | **string** | - |
 | includesDir? | Yes | **boolean** | **undefined** |
 
-[↑ Table of Contents](#table-of-contents)
+[↑ Go back to Guide](#guide)
+
+</details>
+
+<details>
+  <summary>Class: EventsHandler </summary>
 
 ### Class: EventsHandler (extends `EventEmitter`)
 #### Type parameters:
@@ -359,7 +364,7 @@ module.exports = new eventshandler.event({
 #### Methods:
 | Method | Params | Returns | Async? | Description |
 | -------- | -------- | -------- | -------- | -------- |
-| load | client: **Client** | **Promise** **Collection** | Yes | Load all events from the provided path. |
+| load | client: **Client** | **Promise** **EventStructure** | Yes | Load all events from the provided path. |
 
 #### Properties:
 | Property | Readonly? | Type | Default value |
@@ -367,14 +372,39 @@ module.exports = new eventshandler.event({
 | path | Yes | **string** | - |
 | includesDir? | Yes | **boolean** | **undefined** |
 
-[↑ Table of Contents](#table-of-contents)
+[↑ Go back to Guide](#guide)
 
-### Enum: CommandType
-| Property | Type | Returns |
-| -------- | -------- | -------- |
-| ChatInput | **number** | 1 |
-| UserContext | **number** | 2 |
-| MessageContext | **number** | 3 |
+</details>
+
+<details>
+  <summary>Class: ComponentsHandler </summary>
+
+### Class: ComponentsHandler (extends `EventEmitter`)
+#### Type parameters:
+| Parameter | Type | Default | Description |
+| -------- | -------- | -------- | -------- |
+| C | **Client** | - | The Discord bot client. |
+
+#### Constructor:
+| Parameter | Type | Default | Description |
+| -------- | -------- | -------- | -------- |
+| path | **string** | - | The path of the directory. |
+| includesDir? | **boolean** | **false** | Whenever the directory has sub-dirs or not. |
+
+#### Methods:
+| Method | Params | Returns | Async? | Description |
+| -------- | -------- | -------- | -------- | -------- |
+| load | client: **Client**, defaultListener?: **boolean** | **Promise** **ComponentStructure** | Yes | Load all components from the provided path. |
+
+#### Properties:
+| Property | Readonly? | Type | Default value |
+| -------- | -------- | -------- | -------- |
+| path | Yes | **string** | - |
+| includesDir? | Yes | **boolean** | **undefined** |
+
+[↑ Go back to Guide](#guide)
+
+</details>
 
 [↑ Table of Contents](#table-of-contents)
 
@@ -395,11 +425,7 @@ new CommandsHandler<Client, Options>(...);
 ### Custom events for Discord bot Client:
 ```ts
 new EventsHandler
-    <
-        Client,
-        keyof ClientEvents
-        { key: [value: string, ...], ... } // ← Here
-    >
+    <Client, keyof ClientEvents, { key: [value: string, ...], ... }>
     (...);
 
 export default new [handler].customevent(...);

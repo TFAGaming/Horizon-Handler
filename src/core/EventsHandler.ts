@@ -75,12 +75,11 @@ export class EventsHandler<C extends Client, K extends keyof ClientEvents = keyo
     /**
      * Loads all events from the provided path.
      * @param {C} client The Discord bot client to listen to these events.
-     * @param {(file: string, path: string) => string} consolemessage The message to log in console when a file is loaded.
      */
-    public load(client: C): Promise<EventBuilder<C, K>[]> {
+    public load(client: C): Promise<EventStructure<C, K>[]> {
         return new Promise(async (resolved, rejected) => {
             try {
-                const data: EventBuilder<C, K>[] = await importFromDir(this.path, {
+                const data: EventStructure<C, K>[] = await importFromDir(this.path, {
                     includesDir: this.includesDir
                 });
 
