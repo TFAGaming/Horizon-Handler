@@ -2,7 +2,7 @@ import { Client, Collection, REST, RESTOptions } from "discord.js";
 import { CommandStructure, CommandsHandlerEvents } from "./types";
 import { EventEmitter } from 'events';
 
-export declare class CommandsHandler<C extends Client, O = {}, A extends unknown = unknown> extends EventEmitter {
+export declare class CommandsHandler<C extends Client, O = {}, A extends any = unknown> extends EventEmitter {
     readonly collection: Collection<string, CommandStructure<C, O, A>>;
     readonly path: string;
     readonly includesDir?: boolean;
@@ -11,6 +11,9 @@ export declare class CommandsHandler<C extends Client, O = {}, A extends unknown
      * Creates a new handler for Discord bot client's events.
      * @param {string} path The directory path.
      * @param {boolean | undefined} includesDir Whenever the directory has sub-dirs or not.
+     * @typeParam {Client} C The Discord bot Client.
+     * @typeParam {{}} O Custom options.
+     * @typeParam {unknown} A Custom run arguments.
      */
     constructor(path: string, includesDir?: boolean);
 
@@ -39,10 +42,10 @@ export declare class CommandsHandler<C extends Client, O = {}, A extends unknown
      * ```
      */
     command: {
-        new(data: CommandStructure<C, O, A>): {
+        new (data: CommandStructure<C, O, A>): {
             readonly type: 2 | 1 | 3;
             readonly structure: import("@discordjs/builders").ContextMenuCommandBuilder | import("./types").ChatInputCommandBuilder;
-            readonly options?: O | undefined;
+            readonly options?: Partial<Partial<O> | undefined>;
             readonly run: ((client: C, interaction: import("discord.js").ChatInputCommandInteraction<import("discord.js").CacheType>, args?: A | undefined) => void) | ((client: C, interaction: import("discord.js").UserContextMenuCommandInteraction<import("discord.js").CacheType>, args?: A | undefined) => void) | ((client: C, interaction: import("discord.js").MessageContextMenuCommandInteraction<import("discord.js").CacheType>, args?: A | undefined) => void);
         };
     };
@@ -52,7 +55,7 @@ export declare class CommandsHandler<C extends Client, O = {}, A extends unknown
      * @param {Collection<string, CommandStructure<C, O, A>>} collection The collection for listening and responding to application commands.
      */
     load(collection?: Collection<string, CommandStructure<C, O, A>>): Promise<Collection<string, CommandStructure<C, O, A>>>;
-
+    
     /**
      * Reloads all events from the provided path.
      * @param {Collection<string, CommandStructure<C, O, A>>} collection The collection to clear and to set a new data for listening and responding to application commands.

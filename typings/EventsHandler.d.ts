@@ -1,9 +1,10 @@
 import { Client, ClientEvents } from "discord.js";
 import { CustomEventStructure, EventStructure, EventsHandlerEvents } from "./types";
-import { EventBuilder } from "./EventBuilder";
 import { EventEmitter } from 'events';
 
-export declare class EventsHandler<C extends Client, K extends keyof ClientEvents = keyof ClientEvents, I extends { [k: string]: any[] } = { }> extends EventEmitter {
+export declare class EventsHandler<C extends Client, K extends keyof ClientEvents = keyof ClientEvents, I extends {
+    [k: string]: any[];
+} = {}> extends EventEmitter {
     readonly path: string;
     readonly includesDir?: boolean;
 
@@ -13,6 +14,9 @@ export declare class EventsHandler<C extends Client, K extends keyof ClientEvent
      * **Note**: This handler doesn't support custom events names, they all must be from the enum `ClientEvents`.
      * @param {string} path The directory path.
      * @param {boolean | undefined} includesDir Whenever the directory has sub-dirs or not.
+     * @typeParam {Client} C The Discord bot Client.
+     * @typeParam {keyof ClientEvents} K The client events' keys.
+     * @typeParam {{ [k: string]: any[] }} I Custom events names and arguments.
      */
     constructor(path: string, includesDir?: boolean);
 
@@ -30,10 +34,10 @@ export declare class EventsHandler<C extends Client, K extends keyof ClientEvent
      * ```
      */
     event: {
-        new <K extends keyof ClientEvents> (data: EventStructure<C, K>): {
-            readonly event: K;
+        new <K_1 extends keyof ClientEvents>(data: EventStructure<C, K_1>): {
+            readonly event: K_1;
             readonly once?: boolean | undefined;
-            readonly run: (client: C, ...args: ClientEvents[K]) => void;
+            readonly run: (client: C, ...args: ClientEvents[K_1]) => void;
         };
     };
 
@@ -62,7 +66,7 @@ export declare class EventsHandler<C extends Client, K extends keyof ClientEvent
      * Loads all events from the provided path.
      * @param {C} client The Discord bot client to listen to these events.
      */
-    load(client: C): Promise<EventBuilder<C, K>[]>;
+    load(client: C): Promise<EventStructure<C, K>[]>;
 
     on<Z extends keyof EventsHandlerEvents>(event: Z, listener: (...args: EventsHandlerEvents[Z]) => void): this;
     on<S extends string | symbol>(

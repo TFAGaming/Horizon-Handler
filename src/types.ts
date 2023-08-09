@@ -145,15 +145,15 @@ export interface EventsHandlerEvents {
     fileLoad: [event: string]
 };
 
-export enum CommandsHandlerEvent {
+export interface ComponentsHandlerEvents {
+    fileSkip: [event: string],
+    fileLoad: [event: string]
+};
+
+export enum Events {
     DeployStart = 'deployStart',
     DeployFinish = 'deployFinish',
     DeployError = 'deployError',
-    FileSkip = 'fileSkip',
-    FileLoad = 'fileLoad'
-};
-
-export enum EventsHandlerEvent {
     FileSkip = 'fileSkip',
     FileLoad = 'fileLoad'
 };

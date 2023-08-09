@@ -1,4 +1,4 @@
-import { Client } from "discord.js";
+import { Client, Collection } from "discord.js";
 import { ComponentStructure, ComponentsHandlerEvents } from "./types";
 import { EventEmitter } from 'events';
 
@@ -12,6 +12,7 @@ export declare class ComponentsHandler<C extends Client> extends EventEmitter {
      * **Note**: This handler doesn't support custom events names, they all must be from the enum `ClientEvents`.
      * @param {string} path The directory path.
      * @param {boolean | undefined} includesDir Whenever the directory has sub-dirs or not.
+     * @typeParam {Client} C The Discord bot Client.
      */
     constructor(path: string, includesDir?: boolean);
 
@@ -35,13 +36,15 @@ export declare class ComponentsHandler<C extends Client> extends EventEmitter {
             readonly run: ((client: C, interaction: import("discord.js").ButtonInteraction<import("discord.js").CacheType>) => void) | ((client: C, interaction: import("discord.js").StringSelectMenuInteraction<import("discord.js").CacheType>) => void) | ((client: C, interaction: import("discord.js").UserSelectMenuInteraction<import("discord.js").CacheType>) => void) | ((client: C, interaction: import("discord.js").RoleSelectMenuInteraction<import("discord.js").CacheType>) => void) | ((client: C, interaction: import("discord.js").MentionableSelectMenuInteraction<import("discord.js").CacheType>) => void) | ((client: C, interaction: import("discord.js").ChannelSelectMenuInteraction<import("discord.js").CacheType>) => void) | ((client: C, interaction: import("discord.js").ModalSubmitInteraction<import("discord.js").CacheType>) => void);
         };
     };
-    
+
     /**
      * Loads all components from the provided path.
-     * @param {C} client The Discord bot client to listen to these events.
-     * @param {boolean} defaultListener Whenever the handler should listen to these components.
+     * @param {{ defaultListener?: boolean, collection?: Collection<string, ComponentStructure<C>> }} options The options.
      */
-    load(client: C, defaultListener?: boolean): Promise<ComponentStructure<C>[]>;
+    load(options?: {
+        defaultListener?: C;
+        collection?: Collection<string, ComponentStructure<C>>;
+    }): Promise<ComponentStructure<C>[]>;
 
     on<Z extends keyof ComponentsHandlerEvents>(event: Z, listener: (...args: ComponentsHandlerEvents[Z]) => void): this;
     on<S extends string | symbol>(
