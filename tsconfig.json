@@ -14,5 +14,17 @@
     "exclude": [
         "node_modules",
         "lib"
-    ]
+    ],
+    "typedocOptions": {
+        "entryPoints": [
+            "src/",
+        ],
+        /*"exclude": [
+            "src/types.ts"
+        ],*/
+        "theme": ["my-theme"],
+        "out": "docs",
+        "readme": "README.md",
+        "name": "Horizon Handler"
+    }
 }

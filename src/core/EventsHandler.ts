@@ -13,7 +13,10 @@ export class EventsHandler<C extends Client, K extends keyof ClientEvents = keyo
      * 
      * **Note**: This handler doesn't support custom events names, they all must be from the enum `ClientEvents`.
      * @param {string} path The directory path.
-     * @param {boolean | undefined} includesDir Whenever the directory has sub-dirs or not. 
+     * @param {boolean | undefined} includesDir Whenever the directory has sub-dirs or not.
+     * @typeParam {Client} C The Discord bot Client.
+     * @typeParam {keyof ClientEvents} K The client events' keys.
+     * @typeParam {{ [k: string]: any[] }} I Custom events names and arguments.
      */
     constructor(path: string, includesDir?: boolean) {
         super({ captureRejections: false });

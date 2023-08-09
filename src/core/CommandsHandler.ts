@@ -4,7 +4,7 @@ import { CommandStructure } from "../types";
 import { importFromDir } from "./functions";
 import { EventEmitter } from 'events';
 
-export class CommandsHandler<C extends Client, O = {}, A extends unknown = unknown> extends EventEmitter {
+export class CommandsHandler<C extends Client, O = {}, A extends any = unknown> extends EventEmitter {
     public readonly collection: Collection<string, CommandStructure<C, O, A>> = new Collection();
     public readonly path: string;
     public readonly includesDir?: boolean = false;
@@ -13,6 +13,9 @@ export class CommandsHandler<C extends Client, O = {}, A extends unknown = unkno
      * Creates a new handler for Discord bot client's events.
      * @param {string} path The directory path.
      * @param {boolean | undefined} includesDir Whenever the directory has sub-dirs or not.
+     * @typeParam {Client} C The Discord bot Client.
+     * @typeParam {{}} O Custom options.
+     * @typeParam {unknown} A Custom run arguments.
      */
     constructor(path: string, includesDir?: boolean) {
         super({ captureRejections: false });

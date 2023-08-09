@@ -33,21 +33,21 @@ export type ChatInputCommandBuilder =
 export interface CommandStructureChatInput<C extends Client<true>, O = {}, A extends unknown = unknown> {
     type: 1,
     structure: ChatInputCommandBuilder;
-    options?: O;
+    options?: Partial<O>;
     run: (client: C, interaction: ChatInputCommandInteraction, args?: A) => void;
 };
 
 export interface CommandStructureUserContext<C extends Client<true>, O = {}, A extends unknown = unknown> {
     type: 2,
     structure: ContextMenuCommandBuilder;
-    options?: O;
+    options?: Partial<O>;
     run: (client: C, interaction: UserContextMenuCommandInteraction, args?: A) => void;
 };
 
 export interface CommandStructureMessageContext<C extends Client<true>, O = {}, A extends unknown = unknown> {
     type: 3,
     structure: ContextMenuCommandBuilder;
-    options?: O;
+    options?: Partial<O>;
     run: (client: C, interaction: MessageContextMenuCommandInteraction, args?: A) => void;
 };
 

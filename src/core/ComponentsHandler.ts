@@ -1,4 +1,4 @@
-import { Client } from "discord.js";
+import { Client, Collection } from "discord.js";
 import { ComponentStructure } from "../types";
 import { importFromDir } from "./functions";
 import { EventEmitter } from 'events';
@@ -14,6 +14,7 @@ export class ComponentsHandler<C extends Client> extends EventEmitter {
      * **Note**: This handler doesn't support custom events names, they all must be from the enum `ClientEvents`.
      * @param {string} path The directory path.
      * @param {boolean | undefined} includesDir Whenever the directory has sub-dirs or not. 
+     * @typeParam {Client} C The Discord bot Client.
      */
     constructor(path: string, includesDir?: boolean) {
         super({ captureRejections: false });
@@ -43,10 +44,9 @@ export class ComponentsHandler<C extends Client> extends EventEmitter {
 
     /**
      * Loads all components from the provided path.
-     * @param {C} client The Discord bot client to listen to these events.
-     * @param {boolean} defaultListener Whenever the handler should listen to these components.
+     * @param {{ defaultListener?: boolean, collection?: Collection<string, ComponentStructure<C>> }} options The options.
      */
-    public load(client: C, defaultListener?: boolean): Promise<ComponentStructure<C>[]> {
+    public load(options?: { defaultListener?: C, collection?: Collection<string, ComponentStructure<C>> }): Promise<ComponentStructure<C>[]> {
         return new Promise(async (resolved, rejected) => {
             try {
                 const data: ComponentStructure<C>[] = await importFromDir(this.path, {
@@ -60,17 +60,27 @@ export class ComponentsHandler<C extends Client> extends EventEmitter {
                         continue;
                     };
 
-                    if (defaultListener) client.on('interactionCreate', async (interaction) => {
-                        if (interaction.isButton() && module.type === 1 && interaction.customId === module.customId) module.run(client, interaction);
+                    if (options?.defaultListener) {
+                        const client = options.defaultListener;
 
-                        if (interaction.isStringSelectMenu() && module.type === 2 && interaction.customId === module.customId) module.run(client, interaction);
-                        if (interaction.isUserSelectMenu() && module.type === 3 && interaction.customId === module.customId) module.run(client, interaction);
-                        if (interaction.isRoleSelectMenu() && module.type === 4 && interaction.customId === module.customId) module.run(client, interaction);
-                        if (interaction.isMentionableSelectMenu() && module.type === 5 && interaction.customId === module.customId) module.run(client, interaction);
-                        if (interaction.isChannelSelectMenu() && module.type === 6 && interaction.customId === module.customId) module.run(client, interaction);
+                        if (!(client instanceof Client)) throw new TypeError('client is not instance of Client.');
 
-                        if (interaction.isModalSubmit() && module.type === 7 && interaction.customId === module.customId) module.run(client, interaction);
-                    });
+                        client.on('interactionCreate', async (interaction) => {
+                            if (interaction.isButton() && module.type === 1 && interaction.customId === module.customId) module.run(client, interaction);
+
+                            if (interaction.isStringSelectMenu() && module.type === 2 && interaction.customId === module.customId) module.run(client, interaction);
+                            if (interaction.isUserSelectMenu() && module.type === 3 && interaction.customId === module.customId) module.run(client, interaction);
+                            if (interaction.isRoleSelectMenu() && module.type === 4 && interaction.customId === module.customId) module.run(client, interaction);
+                            if (interaction.isMentionableSelectMenu() && module.type === 5 && interaction.customId === module.customId) module.run(client, interaction);
+                            if (interaction.isChannelSelectMenu() && module.type === 6 && interaction.customId === module.customId) module.run(client, interaction);
+
+                            if (interaction.isModalSubmit() && module.type === 7 && interaction.customId === module.customId) module.run(client, interaction);
+                        });
+                    };
+
+                    if (options?.collection) {
+                        options.collection.set(module.customId, module);
+                    };
 
                     this.emit('fileLoad', module.customId, module.type);
                 };
