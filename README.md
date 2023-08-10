@@ -26,6 +26,7 @@ A powerful Discord bot commands, events, and components handler, fully written i
 - [Other Examples](#other-examples)
     - [Using custom options for commands](#using-custom-options-for-commands)
     - [Custom events for Discord bot Client](#custom-events-for-discord-bot-client)
+    - [Handle Autocomplete interaction](#handle-autocomplete-interaction)
 - [Support](#support)
 - [License](#license)
 
@@ -156,7 +157,7 @@ export default new cmdshandler.command({
 ### Create a new event to log whenever the client is ready or not and deploy the application commands to Discord API: (`ready.ts`)
 
 ```ts
-import { eventshandler, cmdshandler } from '../../index';
+import { eventshandler, cmdshandler } from '../index';
 
 export default new eventshandler.event({
     event: 'ready',
@@ -172,7 +173,7 @@ export default new eventshandler.event({
 ### Create a new event to handle application commands: (`interactionCreate.ts`)
 
 ```ts
-import { eventshandler, collection } from '../../index';
+import { eventshandler, collection } from '../index';
 
 export default new eventshandler.event({
     event: 'interactionCreate',
@@ -211,17 +212,87 @@ interface Options {
 new CommandsHandler<Client, Options>(...);
 ```
 
+[↑ Table of Contents](#table-of-contents)
+
 ### Custom events for Discord bot Client:
 ```ts
 type Events = {
     a: [x: string, y: number],
-    b: [z: { }, w: any, g: void],
-    c: [string, number, any, { }, void, unknown]
+    b: [z: { }, w: any, string],
+    c: [string, number, any, { }, void, unknown, []]
 };
 
 new EventsHandler<Client, keyof ClientEvents, Events>(...);
 
 export default new [handler].customevent(...);
+```
+
+[↑ Table of Contents](#table-of-contents)
+
+### Handle Autocomplete interaction:
+
+> **Note**: This example is continued with the Example usage: [Click here](#example-usage)
+
+Create a new `interactionCreate` event file for autocomplete interactions:
+
+```ts
+import { eventshandler, collection } from "../index";
+
+export default new eventshandler.event({
+    event: 'interactionCreate',
+    run: async (client, interaction) => {
+        if (!interaction.isAutocomplete()) return;
+
+        const command = collection.get(interaction.commandName);
+
+        if (!command || command.type !== 1) return;
+
+        try {
+            if (command.autocomplete) command.autocomplete(client, interaction);
+        } catch (e) {
+            console.error(e);
+        };
+    }
+});
+```
+
+Create a command example with autocomplete option:
+
+```ts
+import { SlashCommandBuilder } from 'discord.js';
+import { CommandType } from 'horizon-handler';
+import { cmdshandler } from '../../index';
+
+export default new cmdshandler.command({
+    type: CommandType.ChatInput,
+    structure: new SlashCommandBuilder()
+        .setName('autocomplete')
+        .setDescription('An autocomplete interaction command!')
+        .addStringOption((opt) =>
+            opt.setName('guild')
+                .setDescription('Choose a server.')
+                .setAutocomplete(true)
+                .setRequired(true)
+        ),
+    run: async (client, interaction) => {
+        const guild = interaction.options.getString('guild', true);
+
+        await interaction.reply({
+            content: 'You choosed: ' + guild
+        });
+    },
+    autocomplete: async (client, interaction) => {
+        const focused = interaction.options.getFocused();
+
+		const guilds = client.guilds.cache.map((g) => g.name);
+
+		const filtered = guilds.filter((choice) => choice.startsWith(focused));
+
+		await interaction.respond(
+			filtered.map((choice) => ({ name: choice, value: choice })),
+		);
+    }
+});
 ```
 
 [↑ Table of Contents](#table-of-contents)
