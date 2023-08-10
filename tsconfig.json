@@ -19,9 +19,9 @@
         "entryPoints": [
             "src/",
         ],
-        /*"exclude": [
+        "exclude": [
             "src/types.ts"
-        ],*/
+        ],
         "theme": ["my-theme"],
         "out": "docs",
         "readme": "README.md",

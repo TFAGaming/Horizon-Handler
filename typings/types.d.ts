@@ -1,4 +1,5 @@
 import {
+    AutocompleteInteraction,
     ButtonInteraction,
     ChannelSelectMenuInteraction,
     ChatInputCommandInteraction,
@@ -25,28 +26,31 @@ export declare enum CommandType {
 
 export type ChatInputCommandBuilder = SlashCommandBuilder | Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup"> | SlashCommandSubcommandsOnlyBuilder | RESTPostAPIChatInputApplicationCommandsJSONBody;
 
-export interface CommandStructureChatInput<C extends Client<true>, O = {}, A extends unknown = unknown> {
-    type: 1;
+export interface CommandStructureChatInput<C extends Client<true>, O = {}, A extends any = unknown> {
+    type: 1,
     structure: ChatInputCommandBuilder;
     options?: Partial<O>;
     run: (client: C, interaction: ChatInputCommandInteraction, args?: A) => void;
+    autocomplete?: (client: C, interaction: AutocompleteInteraction, args?: A) => void;
 }
 
-export interface CommandStructureUserContext<C extends Client<true>, O = {}, A extends unknown = unknown> {
-    type: 2;
+export interface CommandStructureUserContext<C extends Client<true>, O = {}, A extends any = unknown> {
+    type: 2,
     structure: ContextMenuCommandBuilder;
     options?: Partial<O>;
     run: (client: C, interaction: UserContextMenuCommandInteraction, args?: A) => void;
+    autocomplete?: never;
 }
 
-export interface CommandStructureMessageContext<C extends Client<true>, O = {}, A extends unknown = unknown> {
-    type: 3;
+export interface CommandStructureMessageContext<C extends Client<true>, O = {}, A extends any = unknown> {
+    type: 3,
     structure: ContextMenuCommandBuilder;
     options?: Partial<O>;
     run: (client: C, interaction: MessageContextMenuCommandInteraction, args?: A) => void;
+    autocomplete?: never;
 }
 
-export type CommandStructure<C extends Client<true>, O = {}, A extends unknown = unknown> = CommandStructureChatInput<C, O, A> | CommandStructureUserContext<C, O, A> | CommandStructureMessageContext<C, O, A>;
+export type CommandStructure<C extends Client<true>, O = {}, A extends any = unknown> = CommandStructureChatInput<C, O, A> | CommandStructureUserContext<C, O, A> | CommandStructureMessageContext<C, O, A>;
 
 export interface EventStructure<C extends Client, K extends keyof ClientEvents> {
     event: K;

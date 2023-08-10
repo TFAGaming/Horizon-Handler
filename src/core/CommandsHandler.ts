@@ -20,6 +20,8 @@ export class CommandsHandler<C extends Client, O = {}, A extends any = unknown> 
     constructor(path: string, includesDir?: boolean) {
         super({ captureRejections: false });
 
+        if (!path) throw new Error('Path is required in constructor options.');
+
         this.path = path;
         this.includesDir = includesDir;
     };
@@ -31,6 +33,8 @@ export class CommandsHandler<C extends Client, O = {}, A extends any = unknown> 
      * @returns 
      */
     public deploy(client: Client<true>, options?: { REST?: RESTOptions, guildId?: string }): Promise<REST> {
+        if (!client) throw new Error('Client is required in the method \'deploy\'.');
+        
         return new Promise(async (resolved, rejected) => {
             try {
                 const rest = new REST(options?.REST).setToken(client.token);

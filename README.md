@@ -5,11 +5,12 @@ A powerful Discord bot commands, events, and components handler, fully written i
 - Supports all type of application commands on Discord: **Chat Input** (Slash), **User context**, and **Message context**.
 - Three available handlers:
     - Commands: Handles Discord API application commands and it's interactions.
-    - Events: Handles Gateaway events from discord.js.
+    - Events: Handles Gateway events from discord.js.
     - Components: Handles components by their custom ID from discord.js.
-        - Select menu: Any type. (User, Channel... etc.)
+        - Select menus (any type).
         - Buttons.
         - Modal submits.
+- Autocomplete interactions supported.
 - Built-in files handler, loads sub-dirs if enabled.
 - **99.9%** Promise-based.
 - Easy and simple to use.
