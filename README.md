@@ -24,6 +24,7 @@ A powerful Discord bot commands, events, and components handler, fully written i
 - [Features](#features)
 - [Table of Contents](#table-of-contents)
 - [Install](#install)
+- [CLI commands](#cli-commands)
 - [Documentation](#documentation)
 - [Example usage](#example-usage)
 - [Other Examples](#other-examples)
@@ -54,6 +55,25 @@ pnpm add horizon-handler
 
 [↑ Table of Contents](#table-of-contents)
 
+## CLI commands
+
+```sh-session
+npx horizon-handler
+```
+
+Used packages: **commander**, **fs-extra**. Install them:
+
+```sh-session
+npm install commander fs-extra
+```
+
+### How to use:
+```sh-session
+npx horizon-handler [ts-example/js-example] <path>
+```
+
+[↑ Table of Contents](#table-of-contents)
+
 ## Documentation
 
 Visit the documentation website: [Click here!](https://tfagaming.github.io/Horizon-Handler/)
@@ -62,7 +82,7 @@ Visit the documentation website: [Click here!](https://tfagaming.github.io/Horiz
 
 ## Example Usage
 
-This is an example usage written in TypeScript.
+This is an example usage written in TypeScript. To skip this, use the CLI commands: [Click here](#cli-commands)
 
 ### Tree of the project
 

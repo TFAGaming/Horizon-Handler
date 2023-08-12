@@ -1,0 +1,19 @@
+{
+    "name": "horizon-handler-bot-example-js",
+    "description": "",
+    "version": "1.0.0",
+    "main": "dist/index.js",
+    "scripts": {
+        "start": "node .",
+        "compile": "tsc"
+    },
+    "dependencies": {
+        "discord.js": "^14.12.1",
+        "horizon-handler": "^1.5.0"
+    },
+    "devDependencies": {
+        "typescript": "^5.1.6"
+    },
+    "author": "",
+    "license": "ISC"
+}
