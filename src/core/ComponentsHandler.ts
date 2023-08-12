@@ -5,6 +5,7 @@ import { EventEmitter } from 'events';
 import { ComponentBuilder } from "./ComponentBuilder";
 
 export class ComponentsHandler<C extends Client> extends EventEmitter {
+    public readonly collection: Collection<string, ComponentStructure<C>> = new Collection();
     public readonly path: string;
     public readonly includesDir?: boolean = false;
 
@@ -44,12 +45,12 @@ export class ComponentsHandler<C extends Client> extends EventEmitter {
 
     /**
      * Loads all components from the provided path.
-     * @param {{ defaultListener?: boolean, collection?: Collection<string, ComponentStructure<C>> }} options The options.
+     * @param {{ defaultListener?: C, collection?: Collection<string, ComponentStructure<C>> }} options The options.
      */
     public load(options?: { defaultListener?: C, collection?: Collection<string, ComponentStructure<C>> }): Promise<ComponentStructure<C>[]> {
         return new Promise(async (resolved, rejected) => {
             try {
-                const data: ComponentStructure<C>[] = await importFromDir(this.path, {
+                const data = await importFromDir<ComponentStructure<C>>(this.path, {
                     includesDir: this.includesDir
                 });
 
@@ -78,9 +79,9 @@ export class ComponentsHandler<C extends Client> extends EventEmitter {
                         });
                     };
 
-                    if (options?.collection) {
-                        options.collection.set(module.customId, module);
-                    };
+                    if (options?.collection) options.collection.set(module.customId, module);
+
+                    this.collection.set(module.customId, module);
 
                     this.emit('fileLoad', module.customId, module.type);
                 };

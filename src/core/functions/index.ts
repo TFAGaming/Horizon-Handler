@@ -44,7 +44,7 @@ export const importFromDir = async <T>(path: string, options?: { includesDir?: b
                 };
             };
         } catch (err) {
-            console.error('Error while loading files.\n', err);
+            throw new Error('An error has occured.\n' + err);
         };
     };
 

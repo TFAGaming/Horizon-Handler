@@ -82,7 +82,7 @@ export class EventsHandler<C extends Client, K extends keyof ClientEvents = keyo
     public load(client: C): Promise<EventStructure<C, K>[]> {
         return new Promise(async (resolved, rejected) => {
             try {
-                const data: EventStructure<C, K>[] = await importFromDir(this.path, {
+                const data = await importFromDir<EventStructure<C, K>>(this.path, {
                     includesDir: this.includesDir
                 });
 

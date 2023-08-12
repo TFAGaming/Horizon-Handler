@@ -39,7 +39,7 @@ export declare class ComponentsHandler<C extends Client> extends EventEmitter {
 
     /**
      * Loads all components from the provided path.
-     * @param {{ defaultListener?: boolean, collection?: Collection<string, ComponentStructure<C>> }} options The options.
+     * @param {{ defaultListener?: C, collection?: Collection<string, ComponentStructure<C>> }} options The options.
      */
     load(options?: {
         defaultListener?: C;

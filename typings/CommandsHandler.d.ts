@@ -2,7 +2,7 @@ import { Client, Collection, REST, RESTOptions } from "discord.js";
 import { CommandStructure, CommandsHandlerEvents } from "./types";
 import { EventEmitter } from 'events';
 
-export declare class CommandsHandler<C extends Client, O = {}, A extends any = unknown> extends EventEmitter {
+export declare class CommandsHandler<C extends Client, O = {}, A extends any[] = unknown[]> extends EventEmitter {
     readonly collection: Collection<string, CommandStructure<C, O, A>>;
     readonly path: string;
     readonly includesDir?: boolean;
