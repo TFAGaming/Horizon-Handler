@@ -46,7 +46,7 @@ export declare class CommandsHandler<C extends Client, O = {}, A extends any[] =
             readonly type: 2 | 1 | 3;
             readonly structure: import("@discordjs/builders").ContextMenuCommandBuilder | import("./types").ChatInputCommandBuilder;
             readonly options?: Partial<Partial<O> | undefined>;
-            readonly run: ((client: C, interaction: import("discord.js").ChatInputCommandInteraction<import("discord.js").CacheType>, args?: A | undefined) => void) | ((client: C, interaction: import("discord.js").UserContextMenuCommandInteraction<import("discord.js").CacheType>, args?: A | undefined) => void) | ((client: C, interaction: import("discord.js").MessageContextMenuCommandInteraction<import("discord.js").CacheType>, args?: A | undefined) => void);
+            readonly run: ((client: C, interaction: import("discord.js").ChatInputCommandInteraction<import("discord.js").CacheType>, args?: A | undefined) => void) | ((client: C, interaction: import("discord.js").UserContextMenuCommandInteraction<import("discord.js").CacheType>, args?: A | undefined) => void) | ((client: C, interaction: import("discord.js").MessageContextMenuCommandInteraction<import("discord.js").CacheType>, ...args: A) => void);
         };
     };
 

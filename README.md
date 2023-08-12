@@ -1,6 +1,9 @@
 # Horizon Handler
 A powerful Discord bot commands, events, and components handler, fully written in TypeScript and has many typings features. Horizon Handler provides simple Discord application commands handler, supports custom options and custom arguments for listeners.
 
+> **Important**
+> This package is not a part of [discord.js](https://npmjs.com/package/discord.js) and it's completely a separate 3ʳᵈ party package.
+
 ## Features
 - Supports all type of application commands on Discord: **Chat Input** (Slash), **User context**, and **Message context**.
 - Three available handlers:
@@ -25,7 +28,8 @@ A powerful Discord bot commands, events, and components handler, fully written i
 - [Example usage](#example-usage)
 - [Other Examples](#other-examples)
     - [Using custom options for commands](#using-custom-options-for-commands)
-    - [Custom events for Discord bot Client](#custom-events-for-discord-bot-client)
+    - [Custom events for Events handler](#custom-events-for-events-handler)
+    - [Custom arguments for Commands handler](#custom-arguments-for-commands-handler)
     - [Handle Autocomplete interaction](#handle-autocomplete-interaction)
 - [Support](#support)
 - [License](#license)
@@ -35,8 +39,10 @@ A powerful Discord bot commands, events, and components handler, fully written i
 - [Node.js](https://nodejs.org/en) v16.9.0 or newer (**recommended**: v18 LTS)
 
 ### Required packages
-- [discord.js](https://npmjs.com/package/discord.js) v^14.12.1
-- [typescript](https://npmjs.com/package/typescript) v^5.1.6 (**required** if you're using TypeScript)
+- [discord.js](https://npmjs.com/package/discord.js) v14.12.1 or newer
+
+> **Warning**
+> If you're using TypeScript, you must install the package [typescript](https://npmjs.com/package/typescript) v5.1.6 or newer.
 
 After you meet all the requirements, you can install the package.
 
@@ -76,7 +82,8 @@ Example Bot
 
 ### tsconfig.json compiler options
 
-> **Note**: For this example, the out directory name is **dist**. You can change it at anytime, but make sure that the path directory names from **CommandsHandler**, **EventsHandler**, and/or **ComponentsHandler** are also renamed to the new one.
+> **Note** 
+> For this example, the out directory name is **dist**. You can change it at anytime, but make sure that the path directory name from **CommandsHandler**, **EventsHandler**, and/or **ComponentsHandler** constructor parameter are also renamed to the new one.
 
 ```json
 {
@@ -214,7 +221,7 @@ new CommandsHandler<Client, Options>(...);
 
 [↑ Table of Contents](#table-of-contents)
 
-### Custom events for Discord bot Client:
+### Custom events for Events handler:
 ```ts
 type Events = {
     a: [x: string, y: number],
@@ -229,9 +236,24 @@ export default new [handler].customevent(...);
 
 [↑ Table of Contents](#table-of-contents)
 
-### Handle Autocomplete interaction:
+### Custom arguments for Commands handler:
 
-> **Note**: This example is continued with the Example usage: [Click here](#example-usage)
+```ts
+type Args = [
+    x: string,
+    y: number,
+    z?: any // ← Optional
+];
+
+new CommandsHandler<Client, { }, Args>(...);
+```
+
+[↑ Table of Contents](#table-of-contents)
+
+### Handle Autocomplete interactions:
+
+> **Note**
+> This example is continued with the Example usage: [Click here](#example-usage)
 
 Create a new `interactionCreate` event file for autocomplete interactions:
 

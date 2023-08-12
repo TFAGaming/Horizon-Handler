@@ -1,6 +1,6 @@
 {
   "name": "horizon-handler",
-  "version": "1.4.4",
+  "version": "1.5.0",
   "description": "A powerful Discord bot commands and events handler, fully written in TypeScript.",
   "main": "lib/index.js",
   "typings": "typings/index.d.ts",
@@ -8,6 +8,9 @@
     "test": "tsc && node .",
     "build": "tsc",
     "docs": "typedoc"
+  },
+  "bin": {
+    "hhandler": "cli/index.js"
   },
   "keywords": [
     "handler",
@@ -22,7 +25,9 @@
     "menu",
     "select menu",
     "button",
-    "buttons"
+    "buttons",
+    "modal",
+    "modals"
   ],
   "author": "TFAGaming",
   "repository": {
