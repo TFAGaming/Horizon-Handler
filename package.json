@@ -1,6 +1,6 @@
 {
   "name": "horizon-handler",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "description": "A powerful Discord bot commands and events handler, fully written in TypeScript.",
   "main": "lib/index.js",
   "typings": "typings/index.d.ts",
@@ -10,7 +10,7 @@
     "docs": "typedoc"
   },
   "bin": {
-    "horizon-handler": "cli/index.js"
+    "hhandler": "cli/index.js"
   },
   "keywords": [
     "handler",
@@ -37,6 +37,7 @@
   "homepage": "https://tfagaming.github.io/Horizon-Handler/",
   "license": "MIT",
   "dependencies": {
+    "colors": "^1.4.0",
     "discord.js": "^14.12.1"
   },
   "devDependencies": {

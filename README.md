@@ -57,19 +57,20 @@ pnpm add horizon-handler
 
 ## CLI commands
 
-```sh-session
+```
 npx horizon-handler
 ```
 
-Used packages: **commander**, **fs-extra**. Install them:
+### How to use:
 
-```sh-session
-npm install commander fs-extra
+```
+npx horizon-handler [ts-example/js-example] [options] <path>
 ```
 
-### How to use:
-```sh-session
-npx horizon-handler [ts-example/js-example] <path>
+To set your bot token in the JavaScript or TypeScript example, use the option `--token` with the argument with type of **string**.
+
+```
+npx horizon-handler [ts-example/js-example] <path> --token 'Your actual bot token'
 ```
 
 [↑ Table of Contents](#table-of-contents)

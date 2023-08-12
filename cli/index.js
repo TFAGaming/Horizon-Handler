@@ -3,6 +3,9 @@
 const { Command } = require('commander');
 const { version: pkgversion } = require('../package.json');
 const fs = require('fs-extra');
+const { join } = require('path');
+const { readFileSync, writeFileSync } = require('fs');
+require('colors');
 
 const program = new Command();
 
@@ -12,57 +15,96 @@ program
     .description('A powerful Discord bot commands, events, and components handler.');
 
 program.command('js-example')
-    .description('Create a Discord bot using Horizon Handler, written in JavaScript.')
+    .description('Example Discord bot using Horizon Handler, written in JavaScript.')
     .argument('<path>', 'The path of the new project.')
+    .option('-s, --token <string>', 'Add bot token automatically.')
     .action(async (path, options) => {
 
         try {
             if (!fs.existsSync(path)) {
-                console.error(`error: '${path}' does not exist.`);
+                console.error(`[Error] The path '${path}' does not exist.`.red);
                 process.exit(1);
             };
 
+            console.log('[Warning] Started creating new project "JavaScript Example"...'.yellow);
+
             const dateBefore = Date.now();
 
-            await fs.copy('./cli/sources/example-JS/', path, {
+            await fs.copy(join(__dirname, './sources/example-JS/'), path || process.cwd(), {
                 preserveTimestamps: true,
                 dereference: true
             });
 
+            const optionToken = options?.token;
+
+            if (optionToken) {
+                const indexPath = join(path || process.cwd(), 'index.js');
+
+                console.log(indexPath);
+
+                const indexContent = readFileSync(indexPath, 'utf-8');
+
+                const indexNewOut = indexContent.replace(/TOKEN/g, optionToken);
+
+                writeFileSync(indexPath, indexNewOut, { encoding: 'utf-8' });
+            };
+
             const dateNow = Date.now();
 
-            const arr = [
+            let arr = [
                 'Initialize a new package: npm init',
                 'Install all dependencies: npm install',
                 'Change the string \'TOKEN\' to your actual bot token in index.js.',
                 'Start the project: node .'
             ];
 
-            console.log(`Done, your new project is ready to use. Follow the steps below to start your bot:\n\n${arr.map((v, i) => `${i + 1}. ${v}`).join('\n')}\n\nTook: ${dateNow - dateBefore}ms`);
+            if (optionToken) arr.splice(2, 1);
+
+            console.log(`[Success] Done, your new project is ready to use. Follow the steps below to start your bot:\n`.green)
+            console.log(`${arr.map((v, i) => `${(i + 1).toString().blue}. ${v}`).join('\n')}\n`)
+            console.log(`[Info] Time: ${dateNow - dateBefore}ms, Path: ${process.cwd()}`);
+
         } catch (err) {
-            console.error('Something went wrong while executing the command.\n', err);
+            console.error('[Error] Something went wrong while executing the command.\n'.red, err);
             process.exit(1);
         };
 
     });
 
 program.command('ts-example')
-    .description('Create a Discord bot using Horizon Handler, written in TypeScript.')
+    .description('Example Discord bot using Horizon Handler, written in TypeScript.')
     .argument('<path>', 'The path of the new project.')
+    .option('-s, --token <string>', 'Add bot token automatically.')
     .action(async (path, options) => {
 
         try {
             if (!fs.existsSync(path)) {
-                console.error(`error: '${path}' path does not exist.`);
+                console.error(`[Error] The path '${path}' does not exist.`.red);
                 process.exit(1);
             };
 
+            console.log('[Warning] Started creating new project "TypeScript Example"...'.yellow);
+
             const dateBefore = Date.now();
 
-            await fs.copy('./cli/sources/example-TS/', path, {
+            await fs.copy(join(__dirname, './sources/example-TS/'), path || process.cwd(), {
                 preserveTimestamps: true,
                 dereference: true
             });
+
+            const optionToken = options?.token;
+
+            if (optionToken) {
+                const indexPath = join(path || process.cwd(), 'index.js');
+
+                console.log(indexPath);
+
+                const indexContent = readFileSync(indexPath, 'utf-8');
+
+                const indexNewOut = indexContent.replace(/TOKEN/g, optionToken);
+
+                writeFileSync(indexPath, indexNewOut, { encoding: 'utf-8' });
+            };
 
             const dateNow = Date.now();
 
@@ -74,7 +116,12 @@ program.command('ts-example')
                 'Start the project: node .'
             ];
 
-            console.log(`Done, your new project is ready to use. Follow the steps below to start your bot:\n\n${arr.map((v, i) => `${i + 1}. ${v}`).join('\n')}\n\nTook: ${dateNow - dateBefore}ms`);
+            if (optionToken) arr.splice(2, 1);
+
+            console.log(`[Success] Done, your new project is ready to use. Follow the steps below to start your bot:\n`.green)
+            console.log(`${arr.map((v, i) => `${(i + 1).toString().blue}. ${v}`).join('\n')}\n`)
+            console.log(`[Info] Time: ${dateNow - dateBefore}ms, Path: ${process.cwd()}`);
+
         } catch (err) {
             console.error('error: Something went wrong while executing the command.\n', err);
             process.exit(1);
