@@ -19,5 +19,4 @@ export const collection = new Collection<string, CommandStructure<Client>>();
     await eventshandler.load(client);
 })();
 
-// Change 'TOKEN' to your actual bot token.
 client.login('TOKEN');

@@ -25,5 +25,4 @@ module.exports = {
     collection
 };
 
-// Change 'TOKEN' to your actual bot token.
 client.login('TOKEN');

@@ -10,12 +10,12 @@ require('colors');
 const program = new Command();
 
 program
-    .name('Horizon Handler')
+    .name('Horizon Handler'.green)
     .version(pkgversion)
     .description('A powerful Discord bot commands, events, and components handler.');
 
 program.command('js-example')
-    .description('Example Discord bot using Horizon Handler, written in JavaScript.')
+    .description('Generate an example Discord bot using Horizon Handler, written in JavaScript.')
     .argument('<path>', 'The path of the new project.')
     .option('-s, --token <string>', 'Add bot token automatically.')
     .action(async (path, options) => {
@@ -40,9 +40,9 @@ program.command('js-example')
             if (optionToken) {
                 const indexPath = join(path || process.cwd(), 'index.js');
 
-                console.log(indexPath);
-
                 const indexContent = readFileSync(indexPath, 'utf-8');
+
+                
 
                 const indexNewOut = indexContent.replace(/TOKEN/g, optionToken);
 
@@ -62,7 +62,7 @@ program.command('js-example')
 
             console.log(`[Success] Done, your new project is ready to use. Follow the steps below to start your bot:\n`.green)
             console.log(`${arr.map((v, i) => `${(i + 1).toString().blue}. ${v}`).join('\n')}\n`)
-            console.log(`[Info] Time: ${dateNow - dateBefore}ms, Path: ${process.cwd()}`);
+            console.log(`[Info] Time: ${dateNow - dateBefore}ms, process path: ${process.cwd()}`);
 
         } catch (err) {
             console.error('[Error] Something went wrong while executing the command.\n'.red, err);
@@ -72,7 +72,7 @@ program.command('js-example')
     });
 
 program.command('ts-example')
-    .description('Example Discord bot using Horizon Handler, written in TypeScript.')
+    .description('Generate an example Discord bot using Horizon Handler, written in TypeScript.')
     .argument('<path>', 'The path of the new project.')
     .option('-s, --token <string>', 'Add bot token automatically.')
     .action(async (path, options) => {
@@ -95,9 +95,7 @@ program.command('ts-example')
             const optionToken = options?.token;
 
             if (optionToken) {
-                const indexPath = join(path || process.cwd(), 'index.js');
-
-                console.log(indexPath);
+                const indexPath = join(path || process.cwd(), 'src/index.ts');
 
                 const indexContent = readFileSync(indexPath, 'utf-8');
 
@@ -120,10 +118,10 @@ program.command('ts-example')
 
             console.log(`[Success] Done, your new project is ready to use. Follow the steps below to start your bot:\n`.green)
             console.log(`${arr.map((v, i) => `${(i + 1).toString().blue}. ${v}`).join('\n')}\n`)
-            console.log(`[Info] Time: ${dateNow - dateBefore}ms, Path: ${process.cwd()}`);
+            console.log(`[Info] Time: ${dateNow - dateBefore}ms, process path: ${process.cwd()}`);
 
         } catch (err) {
-            console.error('error: Something went wrong while executing the command.\n', err);
+            console.error('[Error] Something went wrong while executing the command.\n'.red, err);
             process.exit(1);
         };
 
@@ -139,7 +137,14 @@ program.command('links')
             'Discord: https://discord.gg/E6VFACWu5V'
         ];
 
-        console.log('Here are some useful website links to visit:\n\n' + arr.join('\n'));
+        console.log('Here are some useful website links to visit:\n'.green);
+        console.log(arr.map((v) => {
+            const split = v.split(':', 3);
+
+            if (split.length <= 0) return v;
+
+            return `${split[0].cyan}: ${split[1]}:${split[2]}}`;
+        }).join('\n'));
     });
 
 program.command('about')

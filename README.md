@@ -24,9 +24,11 @@ A powerful Discord bot commands, events, and components handler, fully written i
 - [Features](#features)
 - [Table of Contents](#table-of-contents)
 - [Install](#install)
-- [CLI commands](#cli-commands)
 - [Documentation](#documentation)
 - [Example usage](#example-usage)
+- [CLI commands](#cli-commands)
+    - [How to use](#how-to-use)
+    - [How to fix the error "MODULE_NOT_FOUND"?](#how-to-fix-the-error-module_not_found)
 - [Other Examples](#other-examples)
     - [Using custom options for commands](#using-custom-options-for-commands)
     - [Custom events for Events handler](#custom-events-for-events-handler)
@@ -51,26 +53,6 @@ After you meet all the requirements, you can install the package.
 npm install horizon-handler
 yarn add horizon-handler
 pnpm add horizon-handler
-```
-
-[↑ Table of Contents](#table-of-contents)
-
-## CLI commands
-
-```
-npx horizon-handler
-```
-
-### How to use:
-
-```
-npx horizon-handler [ts-example/js-example] [options] <path>
-```
-
-To set your bot token in the JavaScript or TypeScript example, use the option `--token` with the argument with type of **string**.
-
-```
-npx horizon-handler [ts-example/js-example] <path> --token 'Your actual bot token'
 ```
 
 [↑ Table of Contents](#table-of-contents)
@@ -222,6 +204,39 @@ export default new eventshandler.event({
 ```
 
 [↑ Table of Contents](#usage)
+
+## CLI commands
+
+```
+npx horizon-handler
+```
+
+### How to use:
+
+```
+hhandler [command] [options] <path>
+```
+
+| Command | Arguments | Options | Description |
+| ------- | ------- | ------- | ------- |
+| js-example | path: **string** | --token: **string** | Create a new project for a Discord bot, written in JavaScript. |
+| ts-example | path: **string** | --token: **string** | Create a new project for a Discord bot, written in TypeScript. |
+| links | - | - | View all possible useful and informative links of this package. |
+| about | - | - | About Horizon Handler. |
+
+To set your bot token in the JavaScript or TypeScript example, use the option `--token` with the argument with type of **string**.
+
+```cmd
+hhandler [ts-example/js-example] <path> --token 'Your bot token'
+```
+
+### How to fix the error "MODULE_NOT_FOUND"?
+This package uses three libraries for the CLI commands: **commander**, **fs-extra**, and **colors**. Install them globally:
+```
+npm install -g commander fs-extra colors
+```
+
+[↑ Table of Contents](#table-of-contents)
 
 ## Other Examples
 ### Using custom options for commands:
