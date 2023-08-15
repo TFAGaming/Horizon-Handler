@@ -95,7 +95,7 @@ export class CommandsHandler<C extends Client, O = {}, A extends any[] = unknown
      * Loads all events from the provided path.
      * @param {Collection<string, CommandStructure<C, O, A>>} collection The collection for listening and responding to application commands.
      */
-    public load(collection?: Collection<string, CommandStructure<C, O, A>>): Promise<Collection<string, CommandStructure<C, O, A>>> {
+    public load(collection?: Collection<string, CommandStructure<C, O, A>>): Promise<CommandStructure<C, O, A>[]> {
         return new Promise(async (resolved, rejected) => {
             try {
                 const data = await importFromDir<CommandStructure<C, O, A>>(this.path, {
@@ -116,7 +116,7 @@ export class CommandsHandler<C extends Client, O = {}, A extends any[] = unknown
                     this.emit('fileLoad', command.structure);
                 };
 
-                resolved(this.collection);
+                resolved(data);
             } catch (e) {
                 rejected(e);
             };
@@ -127,7 +127,7 @@ export class CommandsHandler<C extends Client, O = {}, A extends any[] = unknown
      * Reloads all events from the provided path.
      * @param {Collection<string, CommandStructure<C, O, A>>} collection The collection to clear and to set a new data for listening and responding to application commands.
      */
-    public reload(collection?: Collection<string, CommandStructure<C, O, A>>): Promise<Collection<string, CommandStructure<C, O, A>>> {
+    public reload(collection?: Collection<string, CommandStructure<C, O, A>>): Promise<CommandStructure<C, O, A>[]> {
         return new Promise(async (resolved, rejected) => {
             try {
                 this.collection.clear();

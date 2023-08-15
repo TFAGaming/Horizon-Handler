@@ -93,4 +93,23 @@ export class ComponentsHandler<C extends Client> extends EventEmitter {
         });
     };
 
+
+    /**
+     * Reloads all components from the provided path.
+     * @param {Collection<string, ComponentStructure<C>>} collection The collection to clear and to set a new data for listening and responding to the components.
+     */
+    public reload(collection?: Collection<string, ComponentStructure<C>>): Promise<ComponentStructure<C>[]> {
+        return new Promise(async (resolved, rejected) => {
+            try {
+                this.collection.clear();
+                if (collection) collection.clear();
+
+                const output = await this.load();
+
+                resolved(output);
+            } catch (e) {
+                rejected(e);
+            };
+        });
+    };
 };

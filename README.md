@@ -5,17 +5,21 @@ A powerful Discord bot commands, events, and components handler, fully written i
 > This package is not a part of [discord.js](https://npmjs.com/package/discord.js) and it's completely a separate 3ʳᵈ party package.
 
 ## Features
-- Supports all type of application commands on Discord: **Chat Input** (Slash), **User context**, and **Message context**.
+- Open-source project.
+- Supports all type of application commands from Discord API.
 - Three available handlers:
     - Commands: Handles Discord API application commands and it's interactions.
-    - Events: Handles Gateway events from discord.js.
-    - Components: Handles components by their custom ID from discord.js.
+        - Chat Input commands.
+        - User context menu commands.
+        - Message context menu commands.
+    - Events: Handles Gateway events from discord.js Client's events.
+    - Components: Handles components by their custom ID.
         - Select menus (any type).
         - Buttons.
         - Modal submits.
 - Autocomplete interactions supported.
-- Built-in files handler, loads sub-dirs if enabled.
 - **99.9%** Promise-based.
+- CLI commands.
 - Easy and simple to use.
 
 ## Table of Contents
@@ -24,7 +28,9 @@ A powerful Discord bot commands, events, and components handler, fully written i
 - [Features](#features)
 - [Table of Contents](#table-of-contents)
 - [Install](#install)
-- [Documentation](#documentation)
+    - [Required platforms](#required-platforms)
+    - [Required packages](#required-packages)
+- [Links](#links)
 - [Example usage](#example-usage)
 - [CLI commands](#cli-commands)
     - [How to use](#how-to-use)
@@ -42,7 +48,7 @@ A powerful Discord bot commands, events, and components handler, fully written i
 - [Node.js](https://nodejs.org/en) v16.9.0 or newer (**recommended**: v18 LTS)
 
 ### Required packages
-- [discord.js](https://npmjs.com/package/discord.js) v14.12.1 or newer
+- [discord.js](https://npmjs.com/package/discord.js) v14.12.0 or newer
 
 > **Warning**
 > If you're using TypeScript, you must install the package [typescript](https://npmjs.com/package/typescript) v5.1.6 or newer.
@@ -57,9 +63,12 @@ pnpm add horizon-handler
 
 [↑ Table of Contents](#table-of-contents)
 
-## Documentation
+## Links
 
-Visit the documentation website: [Click here!](https://tfagaming.github.io/Horizon-Handler/)
+Documentation: [Click here](https://tfagaming.github.io/Horizon-Handler/)<br>
+Source (GitHub): [Click here](https://github.com/TFAGaming/Horizon-Handler/)<br>
+Issues: [Click here](https://github.com/TFAGaming/Horizon-Handler/issues)<br>
+Pull requests: [Click here](https://github.com/TFAGaming/Horizon-Handler/pulls)<br>
 
 [↑ Table of Contents](#table-of-contents)
 
@@ -94,7 +103,7 @@ Example Bot
         "target": "ES2020",
         "module": "CommonJS",
         "outDir": "dist",
-        "strict": true,
+        "strict": true
     },
     "include": [
         "src"
@@ -121,19 +130,15 @@ client.login('Your bot token goes here');
 
 ### Define a new commands & events handler and load all the files: (`index.ts`)
 ```ts
-import {
-    CommandsHandler,
-    EventsHandler,
-    CommandStructure
-} from 'horizon-handler';
+import { CommandsHandler, CommandStructure, Events, EventsHandler, } from 'horizon-handler';
 
 export const cmdshandler = new CommandsHandler<Client>('./dist/commands/', true);
 
-cmdshandler.on('fileLoad', (command) => console.log(`Loaded new command: ` + command.name));
+cmdshandler.on(Events.FileLoad, (command) => console.log(`Loaded new command: ` + command.name));
 
 export const eventshandler = new EventsHandler<Client>('./dist/events/');
 
-eventshandler.on('fileLoad', (event) => console.log(`Loaded new event: ` + event));
+eventshandler.on(Events.FileLoad, (event) => console.log(`Loaded new event: ` + event));
 
 export const collection = new Collection<string, CommandStructure<Client>>();
 
@@ -244,6 +249,8 @@ npm install -g commander fs-extra colors
 By default, the handler will make all properties in `O` (Type parameter for custom options) optional.
 
 ```ts
+import { Client } from 'discord.js';
+
 interface Options {
     option1: string,
     option2: number,
@@ -258,14 +265,19 @@ new CommandsHandler<Client, Options>(...);
 [↑ Table of Contents](#table-of-contents)
 
 ### Custom events for Events handler:
+
+> **Warning** Make sure to emit these events from **Client** using the method **emit(...)** so they will be able to listen.
+
 ```ts
-type Events = {
+import { Client, ClientEvents } from 'discord.js';
+
+type CustomEvents = {
     a: [x: string, y: number],
     b: [z: { }, w: any, string],
     c: [string, number, any, { }, void, unknown, []]
 };
 
-new EventsHandler<Client, keyof ClientEvents, Events>(...);
+new EventsHandler<Client, keyof ClientEvents, CustomEvents>(...);
 
 export default new [handler].customevent(...);
 ```
@@ -275,10 +287,12 @@ export default new [handler].customevent(...);
 ### Custom arguments for Commands handler:
 
 ```ts
+import { Client } from 'discord.js';
+
 type Args = [
     x: string,
     y: number,
-    z?: any // ← Optional
+    z?: any // ← Optional because of the question mark (?)
 ];
 
 new CommandsHandler<Client, { }, Args>(...);
@@ -324,7 +338,7 @@ import { cmdshandler } from '../../index';
 export default new cmdshandler.command({
     type: CommandType.ChatInput,
     structure: new SlashCommandBuilder()
-        .setName('autocomplete')
+        .setName('autocomplete-command')
         .setDescription('An autocomplete interaction command!')
         .addStringOption((opt) =>
             opt.setName('guild')
@@ -341,13 +355,15 @@ export default new cmdshandler.command({
     },
     autocomplete: async (client, interaction) => {
         const focused = interaction.options.getFocused();
+        
+        const guilds = client.guilds.cache.map((guild) => guild.name);
+        
+        const filtered = guilds.filter((choice) => choice.startsWith(focused));
 
-		const guilds = client.guilds.cache.map((g) => g.name);
-
-		const filtered = guilds.filter((choice) => choice.startsWith(focused));
-
-		await interaction.respond(
-			filtered.map((choice) => ({ name: choice, value: choice })),
+        await interaction.respond(
+			filtered.map(
+                (choice) => ({ name: choice, value: choice })
+            )
 		);
     }
 });
@@ -362,7 +378,11 @@ Need any help? Join our Discord server, report to us the problem, and we will so
     <img src="https://discord.com/api/guilds/918611797194465280/widget.png?style=banner3">
 </a>
 
+<img src="">
+
 [↑ Table of Contents](#table-of-contents)
 
 ## License
 The **MIT** License. ([View here](./LICENSE))
+
+[↑ Table of Contents](#table-of-contents)

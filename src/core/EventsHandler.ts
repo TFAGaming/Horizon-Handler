@@ -1,7 +1,6 @@
 import { Client, ClientEvents } from "discord.js";
 import { CustomEventStructure, EventStructure } from "../types";
 import { importFromDir } from "./functions";
-import { EventBuilder } from "./EventBuilder";
 import { EventEmitter } from 'events';
 
 export class EventsHandler<C extends Client, K extends keyof ClientEvents = keyof ClientEvents, I extends { [k: string]: any[] } = { }> extends EventEmitter {
