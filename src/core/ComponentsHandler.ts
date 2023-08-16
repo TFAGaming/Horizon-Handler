@@ -1,6 +1,6 @@
 import { Client, Collection } from "discord.js";
 import { ComponentStructure } from "../types";
-import { importFromDir } from "./functions";
+import { HorizonError, importFromDir } from "./utils";
 import { EventEmitter } from 'events';
 import { ComponentBuilder } from "./ComponentBuilder";
 
@@ -19,6 +19,10 @@ export class ComponentsHandler<C extends Client> extends EventEmitter {
      */
     constructor(path: string, includesDir?: boolean) {
         super({ captureRejections: false });
+
+        if (!path) throw new HorizonError('MissingRequiredParameter', '\'path\' is required for the constructor.');
+
+        if (includesDir && typeof includesDir !== 'boolean') throw new HorizonError('InvalidParameterType', '\'includesDir\' is not type of boolean.');
 
         this.path = path;
         this.includesDir = includesDir;
@@ -45,9 +49,9 @@ export class ComponentsHandler<C extends Client> extends EventEmitter {
 
     /**
      * Loads all components from the provided path.
-     * @param {{ defaultListener?: C, collection?: Collection<string, ComponentStructure<C>> }} options The options.
+     * @param {C} defaultListener The options.
      */
-    public load(options?: { defaultListener?: C, collection?: Collection<string, ComponentStructure<C>> }): Promise<ComponentStructure<C>[]> {
+    public load(defaultListener?: C): Promise<ComponentStructure<C>[]> {
         return new Promise(async (resolved, rejected) => {
             try {
                 const data = await importFromDir<ComponentStructure<C>>(this.path, {
@@ -61,8 +65,8 @@ export class ComponentsHandler<C extends Client> extends EventEmitter {
                         continue;
                     };
 
-                    if (options?.defaultListener) {
-                        const client = options.defaultListener;
+                    if (defaultListener) {
+                        const client = defaultListener;
 
                         if (!(client instanceof Client)) throw new TypeError('client is not instance of Client.');
 
@@ -79,8 +83,6 @@ export class ComponentsHandler<C extends Client> extends EventEmitter {
                         });
                     };
 
-                    if (options?.collection) options.collection.set(module.customId, module);
-
                     this.collection.set(module.customId, module);
 
                     this.emit('fileLoad', module.customId, module.type);
@@ -96,13 +98,11 @@ export class ComponentsHandler<C extends Client> extends EventEmitter {
 
     /**
      * Reloads all components from the provided path.
-     * @param {Collection<string, ComponentStructure<C>>} collection The collection to clear and to set a new data for listening and responding to the components.
      */
-    public reload(collection?: Collection<string, ComponentStructure<C>>): Promise<ComponentStructure<C>[]> {
+    public reload(): Promise<ComponentStructure<C>[]> {
         return new Promise(async (resolved, rejected) => {
             try {
                 this.collection.clear();
-                if (collection) collection.clear();
 
                 const output = await this.load();
 
@@ -111,5 +111,27 @@ export class ComponentsHandler<C extends Client> extends EventEmitter {
                 rejected(e);
             };
         });
+    };
+
+    public addComponents(...components: ComponentStructure<C>[]) {
+        for (const component of components) {
+            if (!component || !component.customId || !component.type ||!component.run) continue;
+
+            this.collection.set(component.customId, component);
+        };
+
+        return this;
+    };
+
+    public setComponents(...components: ComponentStructure<C>[]) {
+        this.collection.clear();
+
+        for (const component of components) {
+            if (!component || !component.customId || !component.type ||!component.run) continue;
+
+            this.collection.set(component.customId, component);
+        };
+
+        return this;
     };
 };

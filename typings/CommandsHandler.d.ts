@@ -13,7 +13,7 @@ export declare class CommandsHandler<C extends Client, O = {}, A extends any[] =
      * @param {boolean | undefined} includesDir Whenever the directory has sub-dirs or not.
      * @typeParam {Client} C The Discord bot Client.
      * @typeParam {{}} O Custom options.
-     * @typeParam {unknown} A Custom run arguments.
+     * @typeParam {any[]} A Custom run arguments.
      */
     constructor(path: string, includesDir?: boolean);
 
@@ -46,21 +46,25 @@ export declare class CommandsHandler<C extends Client, O = {}, A extends any[] =
             readonly type: 2 | 1 | 3;
             readonly structure: import("@discordjs/builders").ContextMenuCommandBuilder | import("./types").ChatInputCommandBuilder;
             readonly options?: Partial<Partial<O> | undefined>;
-            readonly run: ((client: C, interaction: import("discord.js").ChatInputCommandInteraction<import("discord.js").CacheType>, args?: A | undefined) => void) | ((client: C, interaction: import("discord.js").UserContextMenuCommandInteraction<import("discord.js").CacheType>, args?: A | undefined) => void) | ((client: C, interaction: import("discord.js").MessageContextMenuCommandInteraction<import("discord.js").CacheType>, ...args: A) => void);
+            readonly run: ((client: C, interaction: import("discord.js").ChatInputCommandInteraction<import("discord.js").CacheType>, ...args: A) => void | PromiseLike<void>) | ((client: C, interaction: import("discord.js").UserContextMenuCommandInteraction<import("discord.js").CacheType>, ...args: A) => void | PromiseLike<void>) | ((client: C, interaction: import("discord.js").MessageContextMenuCommandInteraction<import("discord.js").CacheType>, ...args: A) => void | PromiseLike<void>);
+            readonly autocomplete?: (() => never) | (() => never) | ((client: C, interaction: import("discord.js").AutocompleteInteraction<import("discord.js").CacheType>, ...args: A) => void | PromiseLike<void>) | undefined;
+            
+            toJSON(): CommandStructure<C, O, A>;
         };
     };
 
     /**
      * Loads all events from the provided path.
-     * @param {Collection<string, CommandStructure<C, O, A>>} collection The collection for listening and responding to application commands.
      */
-    load(collection?: Collection<string, CommandStructure<C, O, A>>): Promise<Collection<string, CommandStructure<C, O, A>>>;
-    
+    load(): Promise<CommandStructure<C, O, A>[]>;
+
     /**
      * Reloads all events from the provided path.
-     * @param {Collection<string, CommandStructure<C, O, A>>} collection The collection to clear and to set a new data for listening and responding to application commands.
      */
-    reload(collection?: Collection<string, CommandStructure<C, O, A>>): Promise<Collection<string, CommandStructure<C, O, A>>>;
+    reload(): Promise<CommandStructure<C, O, A>[]>;
+
+    addCommands(...commands: CommandStructure<C, O, A>[]): this;
+    setCommands(...commands: CommandStructure<C, O, A>[]): this;
 
     on<Z extends keyof CommandsHandlerEvents>(event: Z, listener: (...args: CommandsHandlerEvents[Z]) => void): this;
     on<S extends string | symbol>(

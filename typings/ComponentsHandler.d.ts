@@ -3,6 +3,7 @@ import { ComponentStructure, ComponentsHandlerEvents } from "./types";
 import { EventEmitter } from 'events';
 
 export declare class ComponentsHandler<C extends Client> extends EventEmitter {
+    readonly collection: Collection<string, ComponentStructure<C>>;
     readonly path: string;
     readonly includesDir?: boolean;
 
@@ -33,18 +34,25 @@ export declare class ComponentsHandler<C extends Client> extends EventEmitter {
         new (data: ComponentStructure<C>): {
             readonly type: 2 | 1 | 3 | 4 | 5 | 6 | 7;
             readonly customId: string;
-            readonly run: ((client: C, interaction: import("discord.js").ButtonInteraction<import("discord.js").CacheType>) => void) | ((client: C, interaction: import("discord.js").StringSelectMenuInteraction<import("discord.js").CacheType>) => void) | ((client: C, interaction: import("discord.js").UserSelectMenuInteraction<import("discord.js").CacheType>) => void) | ((client: C, interaction: import("discord.js").RoleSelectMenuInteraction<import("discord.js").CacheType>) => void) | ((client: C, interaction: import("discord.js").MentionableSelectMenuInteraction<import("discord.js").CacheType>) => void) | ((client: C, interaction: import("discord.js").ChannelSelectMenuInteraction<import("discord.js").CacheType>) => void) | ((client: C, interaction: import("discord.js").ModalSubmitInteraction<import("discord.js").CacheType>) => void);
+            readonly run: ((client: C, interaction: import("discord.js").ButtonInteraction<import("discord.js").CacheType>) => void | PromiseLike<void>) | ((client: C, interaction: import("discord.js").StringSelectMenuInteraction<import("discord.js").CacheType>) => void | PromiseLike<void>) | ((client: C, interaction: import("discord.js").UserSelectMenuInteraction<import("discord.js").CacheType>) => void | PromiseLike<void>) | ((client: C, interaction: import("discord.js").RoleSelectMenuInteraction<import("discord.js").CacheType>) => void | PromiseLike<void>) | ((client: C, interaction: import("discord.js").MentionableSelectMenuInteraction<import("discord.js").CacheType>) => void | PromiseLike<void>) | ((client: C, interaction: import("discord.js").ChannelSelectMenuInteraction<import("discord.js").CacheType>) => void | PromiseLike<void>) | ((client: C, interaction: import("discord.js").ModalSubmitInteraction<import("discord.js").CacheType>) => void | PromiseLike<void>);
+        
+            toJSON(): ComponentStructure<C>;
         };
     };
 
     /**
      * Loads all components from the provided path.
-     * @param {{ defaultListener?: C, collection?: Collection<string, ComponentStructure<C>> }} options The options.
+     * @param {C} defaultListener The options.
      */
-    load(options?: {
-        defaultListener?: C;
-        collection?: Collection<string, ComponentStructure<C>>;
-    }): Promise<ComponentStructure<C>[]>;
+    load(defaultListener?: C): Promise<ComponentStructure<C>[]>;
+
+    /**
+     * Reloads all components from the provided path.
+     */
+    reload(): Promise<ComponentStructure<C>[]>;
+
+    addComponents(...components: ComponentStructure<C>[]): this;
+    setComponents(...components: ComponentStructure<C>[]): this;
 
     on<Z extends keyof ComponentsHandlerEvents>(event: Z, listener: (...args: ComponentsHandlerEvents[Z]) => void): this;
     on<S extends string | symbol>(

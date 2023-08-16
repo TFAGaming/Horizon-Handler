@@ -1,7 +1,7 @@
 import { Client, Collection, REST, RESTOptions, Routes } from "discord.js";
 import { CommandBuilder } from "./CommandBuilder";
 import { CommandStructure } from "../types";
-import { importFromDir } from "./functions";
+import { HorizonError, importFromDir } from "./utils";
 import { EventEmitter } from 'events';
 
 export class CommandsHandler<C extends Client, O = {}, A extends any[] = unknown[]> extends EventEmitter {
@@ -20,7 +20,9 @@ export class CommandsHandler<C extends Client, O = {}, A extends any[] = unknown
     constructor(path: string, includesDir?: boolean) {
         super({ captureRejections: false });
 
-        if (!path) throw new Error('Path is required in constructor options.');
+        if (!path) throw new HorizonError('MissingRequiredParameter', '\'path\' is required for the constructor.');
+
+        if (includesDir && typeof includesDir !== 'boolean') throw new HorizonError('InvalidParameterType', '\'includesDir\' is not type of boolean.');
 
         this.path = path;
         this.includesDir = includesDir;
@@ -33,9 +35,9 @@ export class CommandsHandler<C extends Client, O = {}, A extends any[] = unknown
      * @returns 
      */
     public deploy(client: Client<true>, options?: { REST?: RESTOptions, guildId?: string }): Promise<REST> {
-        if (!client) throw new Error('Client is required in the method \'deploy\'.');
+        if (!client) throw new HorizonError('MissingRequiredParameter', '\'client\' is required for the method.');
         
-        if (!client.isReady()) throw new Error('Client must be ready to deploy application commands.');
+        if (!client.isReady()) throw new HorizonError('DiscordClientError', 'The client is not ready yet.');
 
         return new Promise(async (resolved, rejected) => {
             try {
@@ -93,9 +95,8 @@ export class CommandsHandler<C extends Client, O = {}, A extends any[] = unknown
 
     /**
      * Loads all events from the provided path.
-     * @param {Collection<string, CommandStructure<C, O, A>>} collection The collection for listening and responding to application commands.
      */
-    public load(collection?: Collection<string, CommandStructure<C, O, A>>): Promise<CommandStructure<C, O, A>[]> {
+    public load(): Promise<CommandStructure<C, O, A>[]> {
         return new Promise(async (resolved, rejected) => {
             try {
                 const data = await importFromDir<CommandStructure<C, O, A>>(this.path, {
@@ -111,8 +112,6 @@ export class CommandsHandler<C extends Client, O = {}, A extends any[] = unknown
 
                     this.collection.set(command.structure.name, command);
 
-                    if (collection) collection.set(command.structure.name, command);
-
                     this.emit('fileLoad', command.structure);
                 };
 
@@ -125,13 +124,11 @@ export class CommandsHandler<C extends Client, O = {}, A extends any[] = unknown
 
     /**
      * Reloads all events from the provided path.
-     * @param {Collection<string, CommandStructure<C, O, A>>} collection The collection to clear and to set a new data for listening and responding to application commands.
      */
-    public reload(collection?: Collection<string, CommandStructure<C, O, A>>): Promise<CommandStructure<C, O, A>[]> {
+    public reload(): Promise<CommandStructure<C, O, A>[]> {
         return new Promise(async (resolved, rejected) => {
             try {
                 this.collection.clear();
-                if (collection) collection.clear();
 
                 const output = await this.load();
 
@@ -140,5 +137,27 @@ export class CommandsHandler<C extends Client, O = {}, A extends any[] = unknown
                 rejected(e);
             };
         });
+    };
+
+    public addCommands(...commands: CommandStructure<C, O, A>[]) {
+        for (const command of commands) {
+            if (!command || !command.structure || !command.run || !command.type) continue;
+
+            this.collection.set(command.structure.name, command);
+        };
+
+        return this;
+    };
+
+    public setCommands(...commands: CommandStructure<C, O, A>[]) {
+        this.collection.clear();
+
+        for (const command of commands) {
+            if (!command || !command.structure || !command.run || !command.type) continue;
+
+            this.collection.set(command.structure.name, command);
+        };
+
+        return this;
     };
 };

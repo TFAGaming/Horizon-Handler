@@ -37,7 +37,9 @@ export declare class EventsHandler<C extends Client, K extends keyof ClientEvent
         new <K_1 extends keyof ClientEvents>(data: EventStructure<C, K_1>): {
             readonly event: K_1;
             readonly once?: boolean | undefined;
-            readonly run: (client: C, ...args: ClientEvents[K_1]) => void;
+            readonly run: (client: C, ...args: ClientEvents[K_1]) => void | PromiseLike<void>;
+
+            toJSON(): EventStructure<C, K_1>;
         };
     };
 
@@ -58,10 +60,12 @@ export declare class EventsHandler<C extends Client, K extends keyof ClientEvent
         new <K_1 extends keyof I = keyof I>(data: CustomEventStructure<C, I, K_1>): {
             readonly event: K_1;
             readonly once?: boolean | undefined;
-            readonly run: (client: C, ...args: I[K_1]) => void;
+            readonly run: (client: C, ...args: I[K_1]) => void | PromiseLike<void>;
+
+            toJSON(): CustomEventStructure<C, I, K_1>;
         };
     };
-
+    
     /**
      * Loads all events from the provided path.
      * @param {C} client The Discord bot client to listen to these events.

@@ -1,5 +1,5 @@
-import { Client, Collection } from 'discord.js';
-import { CommandsHandler, EventsHandler, CommandStructure } from 'horizon-handler';
+import { Client } from 'discord.js';
+import { CommandsHandler, EventsHandler } from 'horizon-handler';
 
 const client = new Client({
     intents: [
@@ -7,14 +7,12 @@ const client = new Client({
     ]
 });
 
-export const cmdshandler = new CommandsHandler<Client>('./dist/commands/');
+export const commandshandler = new CommandsHandler<Client>('./dist/commands/');
 
 export const eventshandler = new EventsHandler<Client>('./dist/events/');
 
-export const collection = new Collection<string, CommandStructure<Client>>();
-
 (async () => {
-    await cmdshandler.load(collection);
+    await commandshandler.load();
 
     await eventshandler.load(client);
 })();

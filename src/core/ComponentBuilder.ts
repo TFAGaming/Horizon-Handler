@@ -13,4 +13,12 @@ export class ComponentBuilder<C extends Client> {
         this.customId = data.customId;
         this.run = data.run;
     };
+
+    toJSON(): ComponentStructure<C> {
+        return {
+            type: this.type,
+            customId: this.customId,
+            run: this.run
+        } as ComponentStructure<C>;
+    };
 };

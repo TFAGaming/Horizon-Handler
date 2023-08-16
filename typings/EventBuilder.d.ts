@@ -7,4 +7,6 @@ export declare class EventBuilder<C extends Client, K extends keyof ClientEvents
     readonly run: EventStructure<C, K>['run'];
     
     constructor(data: EventStructure<C, K>);
+
+    toJSON(): EventStructure<C, K>
 }

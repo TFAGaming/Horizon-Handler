@@ -1,4 +1,4 @@
-import { eventshandler, cmdshandler } from '../index';
+import { eventshandler, commandshandler } from '../index';
 
 export default new eventshandler.event({
     event: 'ready',
@@ -7,7 +7,7 @@ export default new eventshandler.event({
 
         console.log(`Logged in as: ` + client.user.displayName);
 
-        await cmdshandler.deploy(client);
+        await commandshandler.deploy(client);
         
     }
 });

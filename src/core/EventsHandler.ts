@@ -1,6 +1,6 @@
 import { Client, ClientEvents } from "discord.js";
 import { CustomEventStructure, EventStructure } from "../types";
-import { importFromDir } from "./functions";
+import { HorizonError, importFromDir } from "./utils";
 import { EventEmitter } from 'events';
 
 export class EventsHandler<C extends Client, K extends keyof ClientEvents = keyof ClientEvents, I extends { [k: string]: any[] } = { }> extends EventEmitter {
@@ -19,6 +19,10 @@ export class EventsHandler<C extends Client, K extends keyof ClientEvents = keyo
      */
     constructor(path: string, includesDir?: boolean) {
         super({ captureRejections: false });
+
+        if (!path) throw new HorizonError('MissingRequiredParameter', '\'path\' is required for the constructor.');
+
+        if (includesDir && typeof includesDir !== 'boolean') throw new HorizonError('InvalidParameterType', '\'includesDir\' is not type of boolean.');
 
         this.path = path;
         this.includesDir = includesDir;
@@ -79,6 +83,8 @@ export class EventsHandler<C extends Client, K extends keyof ClientEvents = keyo
      * @param {C} client The Discord bot client to listen to these events.
      */
     public load(client: C): Promise<EventStructure<C, K>[]> {
+        if (!client) throw new HorizonError('MissingRequiredParameter', '\'client\' is required for the method.');
+
         return new Promise(async (resolved, rejected) => {
             try {
                 const data = await importFromDir<EventStructure<C, K>>(this.path, {

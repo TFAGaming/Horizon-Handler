@@ -1,4 +1,4 @@
-const { Client, Collection } = require('discord.js');
+const { Client } = require('discord.js');
 const { CommandsHandler, EventsHandler } = require('horizon-handler');
 
 const client = new Client({
@@ -7,13 +7,11 @@ const client = new Client({
     ]
 });
 
-const collection = new Collection();
-
 const commandshandler = new CommandsHandler('./commands/');
 const eventshandler = new EventsHandler('./events/');
 
 (async () => {
-    await commandshandler.load(collection);
+    await commandshandler.load();
 
     await eventshandler.load(client);
 })();
@@ -21,8 +19,7 @@ const eventshandler = new EventsHandler('./events/');
 module.exports = {
     client,
     commandshandler,
-    eventshandler,
-    collection
+    eventshandler
 };
 
 client.login('TOKEN');

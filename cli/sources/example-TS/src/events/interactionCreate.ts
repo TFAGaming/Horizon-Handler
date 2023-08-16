@@ -1,4 +1,4 @@
-import { eventshandler, collection } from '../index';
+import { eventshandler, commandshandler } from '../index';
 
 export default new eventshandler.event({
     event: 'interactionCreate',
@@ -6,7 +6,7 @@ export default new eventshandler.event({
         
         if (!interaction.isChatInputCommand()) return;
 
-        const command = collection.get(interaction.commandName);
+        const command = commandshandler.collection.get(interaction.commandName);
 
         if (!command || command.type !== 1) return;
 

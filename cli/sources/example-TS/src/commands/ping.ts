@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from 'discord.js';
-import { cmdshandler } from '../index';
+import { commandshandler } from '../index';
 
-export default new cmdshandler.command({
+export default new commandshandler.command({
     type: 1,
     structure: new SlashCommandBuilder()
         .setName('ping')

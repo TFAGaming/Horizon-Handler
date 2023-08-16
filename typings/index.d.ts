@@ -1,3 +1,5 @@
+declare module 'horizon-handler';
+
 export * from './CommandBuilder';
 export * from './CommandsHandler';
 export * from './ComponentBuilder';

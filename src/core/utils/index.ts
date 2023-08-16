@@ -1,5 +1,6 @@
 import { join, extname, resolve } from 'path';
 import { promises as fspromises } from 'fs';
+import { HorizonErrorCodes } from '../../types';
 
 export const importFromDir = async <T>(path: string, options?: { includesDir?: boolean }) => {
     const data: T[] = [];
@@ -51,4 +52,10 @@ export const importFromDir = async <T>(path: string, options?: { includesDir?: b
     await main(path);
 
     return data;
+};
+
+export class HorizonError<K extends keyof HorizonErrorCodes> extends Error {
+    constructor(code: K, ...args: string[]) {
+        super(`[Horizon Handler] ${code}: ${args.join('')}`)
+    };
 };

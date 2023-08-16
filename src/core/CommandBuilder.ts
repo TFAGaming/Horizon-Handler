@@ -17,4 +17,14 @@ export class CommandBuilder<C extends Client, O = {}, A extends any[] = unknown[
         this.run = data.run;
         this.autocomplete = data.autocomplete;
     };
+
+    toJSON(): CommandStructure<C, O, A> {
+        return {
+            type: this.type,
+            structure: this.structure,
+            options: this.options,
+            run: this.run,
+            autocomplete: this.autocomplete
+        } as CommandStructure<C, O, A>;
+    };
 };

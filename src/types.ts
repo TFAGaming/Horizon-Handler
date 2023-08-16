@@ -163,3 +163,10 @@ export enum Events {
     FileSkip = 'fileSkip',
     FileLoad = 'fileLoad'
 };
+
+// Others
+export interface HorizonErrorCodes {
+    MissingRequiredParameter: 'MissingRequiredParameter',
+    InvalidParameterType: 'InvalidParameterType',
+    DiscordClientError: 'DiscordClientError'
+};

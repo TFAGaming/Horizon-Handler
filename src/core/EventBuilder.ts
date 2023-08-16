@@ -14,4 +14,12 @@ export class EventBuilder<C extends Client, K extends keyof ClientEvents> {
         this.once = data.once;
         this.run = data.run;
     };
+
+    toJSON(): EventStructure<C, K> {
+        return {
+            event: this.event,
+            once: this.once,
+            run: this.run
+        } as EventStructure<C, K>;
+    };
 };

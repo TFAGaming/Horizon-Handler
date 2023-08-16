@@ -17,8 +17,10 @@ A powerful Discord bot commands, events, and components handler, fully written i
         - Select menus (any type).
         - Buttons.
         - Modal submits.
+- Built-in collections (`Collection` from discord.js).
 - Autocomplete interactions supported.
 - **99.9%** Promise-based.
+- Fully written in TypeScript.
 - CLI commands.
 - Easy and simple to use.
 
@@ -40,6 +42,7 @@ A powerful Discord bot commands, events, and components handler, fully written i
     - [Custom events for Events handler](#custom-events-for-events-handler)
     - [Custom arguments for Commands handler](#custom-arguments-for-commands-handler)
     - [Handle Autocomplete interaction](#handle-autocomplete-interaction)
+    - [Add components or commands without creating a file](#add-components-or-commands-without-creating-a-file)
 - [Support](#support)
 - [License](#license)
 
@@ -130,7 +133,7 @@ client.login('Your bot token goes here');
 
 ### Define a new commands & events handler and load all the files: (`index.ts`)
 ```ts
-import { CommandsHandler, CommandStructure, Events, EventsHandler, } from 'horizon-handler';
+import { CommandsHandler, Events, EventsHandler } from 'horizon-handler';
 
 export const cmdshandler = new CommandsHandler<Client>('./dist/commands/', true);
 
@@ -140,10 +143,8 @@ export const eventshandler = new EventsHandler<Client>('./dist/events/');
 
 eventshandler.on(Events.FileLoad, (event) => console.log(`Loaded new event: ` + event));
 
-export const collection = new Collection<string, CommandStructure<Client>>();
-
 (async () => {
-    await cmdshandler.load(collection);
+    await cmdshandler.load();
 
     await eventshandler.load(client);
 })();
@@ -188,14 +189,14 @@ export default new eventshandler.event({
 ### Create a new event to handle application commands: (`interactionCreate.ts`)
 
 ```ts
-import { eventshandler, collection } from '../index';
+import { eventshandler, cmdshandler } from '../index';
 
 export default new eventshandler.event({
     event: 'interactionCreate',
     run: (client, interaction) => {
         if (!interaction.isChatInputCommand()) return;
 
-        const command = collection.get(interaction.commandName);
+        const command = cmdshandler.collection.get(interaction.commandName);
 
         if (!command || command.type !== 1) return;
 
@@ -364,9 +365,49 @@ export default new cmdshandler.command({
 			filtered.map(
                 (choice) => ({ name: choice, value: choice })
             )
-		);
+	    );
     }
 });
+```
+
+[↑ Table of Contents](#table-of-contents)
+
+### Add components or commands without creating a file:
+
+> **Note** The difference between **add** and **set** that the first one (**add**) will set more keys in the collection, even overwrites the old key's data. The other one (**set**) will clear the entire collection and then adds the commands/components in the collection.
+
+```ts
+[commands handler].addCommands(
+    {
+        type: ...,
+        structure: ...,
+        run: (...) => ...
+    }, ...
+);
+
+[commands handler].setCommands(
+    {
+        type: ...,
+        structure: ...,
+        run: (...) => ...
+    }, ...
+);
+
+[components handler].addComponents(
+    {
+        type: ...,
+        customId: ...,
+        run: (...) => ...
+    }, ...
+);
+
+[components handler].setComponents(
+    {
+        type: ...,
+        customId: ...,
+        run: (...) => ...
+    }, ...
+);
 ```
 
 [↑ Table of Contents](#table-of-contents)
