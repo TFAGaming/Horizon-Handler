@@ -2,5 +2,7 @@ src/
 docs/
 node_modules/
 cli/test/
+assets/
 
+lib/test
 package-lock.json

@@ -8,7 +8,7 @@ export declare class CommandsHandler<C extends Client, O = {}, A extends any[] =
     readonly includesDir?: boolean;
 
     /**
-     * Creates a new handler for Discord bot client's events.
+     * Creates a new handler for Discord API interaction application commands.
      * @param {string} path The directory path.
      * @param {boolean | undefined} includesDir Whenever the directory has sub-dirs or not.
      * @typeParam {Client} C The Discord bot Client.
@@ -48,18 +48,19 @@ export declare class CommandsHandler<C extends Client, O = {}, A extends any[] =
             readonly options?: Partial<Partial<O> | undefined>;
             readonly run: ((client: C, interaction: import("discord.js").ChatInputCommandInteraction<import("discord.js").CacheType>, ...args: A) => void | PromiseLike<void>) | ((client: C, interaction: import("discord.js").UserContextMenuCommandInteraction<import("discord.js").CacheType>, ...args: A) => void | PromiseLike<void>) | ((client: C, interaction: import("discord.js").MessageContextMenuCommandInteraction<import("discord.js").CacheType>, ...args: A) => void | PromiseLike<void>);
             readonly autocomplete?: (() => never) | (() => never) | ((client: C, interaction: import("discord.js").AutocompleteInteraction<import("discord.js").CacheType>, ...args: A) => void | PromiseLike<void>) | undefined;
-            
+            readonly disabled?: boolean;
+
             toJSON(): CommandStructure<C, O, A>;
         };
     };
 
     /**
-     * Loads all events from the provided path.
+     * Loads all commands from the provided path.
      */
     load(): Promise<CommandStructure<C, O, A>[]>;
 
     /**
-     * Reloads all events from the provided path.
+     * Reloads all commands from the provided path.
      */
     reload(): Promise<CommandStructure<C, O, A>[]>;
 

@@ -10,8 +10,6 @@ export declare class EventsHandler<C extends Client, K extends keyof ClientEvent
 
     /**
      * Creates a new handler for Discord bot client's events.
-     *
-     * **Note**: This handler doesn't support custom events names, they all must be from the enum `ClientEvents`.
      * @param {string} path The directory path.
      * @param {boolean | undefined} includesDir Whenever the directory has sub-dirs or not.
      * @typeParam {Client} C The Discord bot Client.

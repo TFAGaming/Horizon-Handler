@@ -10,9 +10,7 @@ export class ComponentsHandler<C extends Client> extends EventEmitter {
     public readonly includesDir?: boolean = false;
 
     /**
-     * Creates a new handler for Discord bot client's events.
-     * 
-     * **Note**: This handler doesn't support custom events names, they all must be from the enum `ClientEvents`.
+     * Creates a new handler for Discord bot client's interaction components events.
      * @param {string} path The directory path.
      * @param {boolean | undefined} includesDir Whenever the directory has sub-dirs or not. 
      * @typeParam {Client} C The Discord bot Client.
@@ -59,7 +57,7 @@ export class ComponentsHandler<C extends Client> extends EventEmitter {
                 });
 
                 for (const module of data) {
-                    if (!module.customId || !module.type || !module.run) {
+                    if (!module.customId || !module.type || !module.run || module.disabled) {
                         this.emit('fileSkip', module.customId, module.type);
 
                         continue;

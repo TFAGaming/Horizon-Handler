@@ -1,3 +1,5 @@
+<img src="https://raw.githubusercontent.com/TFAGaming/Horizon-Handler/main/assets/icon.png">
+
 # Horizon Handler
 A powerful Discord bot commands, events, and components handler, fully written in TypeScript and has many typings features. Horizon Handler provides simple Discord application commands handler, supports custom options and custom arguments for listeners.
 
@@ -135,16 +137,16 @@ client.login('Your bot token goes here');
 ```ts
 import { CommandsHandler, Events, EventsHandler } from 'horizon-handler';
 
-export const cmdshandler = new CommandsHandler<Client>('./dist/commands/', true);
+export const commandshandler = new CommandsHandler<Client>('./dist/commands/', true);
 
-cmdshandler.on(Events.FileLoad, (command) => console.log(`Loaded new command: ` + command.name));
+commandshandler.on(Events.FileLoad, (command) => console.log(`Loaded new command: ` + command.name));
 
 export const eventshandler = new EventsHandler<Client>('./dist/events/');
 
 eventshandler.on(Events.FileLoad, (event) => console.log(`Loaded new event: ` + event));
 
 (async () => {
-    await cmdshandler.load();
+    await commandshandler.load();
 
     await eventshandler.load(client);
 })();
@@ -155,9 +157,9 @@ eventshandler.on(Events.FileLoad, (event) => console.log(`Loaded new event: ` + 
 ```ts
 import { SlashCommandBuilder } from 'discord.js';
 import { CommandType } from 'horizon-handler';
-import { cmdshandler } from '../../index';
+import { commandshandler } from '../../index';
 
-export default new cmdshandler.command({
+export default new commandshandler.command({
     type: CommandType.ChatInput,
     structure: new SlashCommandBuilder()
         .setName('ping')
@@ -173,15 +175,15 @@ export default new cmdshandler.command({
 ### Create a new event to log whenever the client is ready or not and deploy the application commands to Discord API: (`ready.ts`)
 
 ```ts
-import { eventshandler, cmdshandler } from '../index';
+import { eventshandler, commandshandler } from '../index';
 
 export default new eventshandler.event({
     event: 'ready',
     once: true,
     run: async (_, client) => {
-        console.log(`Logged in as: ` + client.user.displayName);
+        console.log('Logged in as: ' + client.user.displayName);
 
-        await cmdshandler.deploy(client);
+        await commandshandler.deploy(client);
     }
 });
 ```
@@ -189,14 +191,14 @@ export default new eventshandler.event({
 ### Create a new event to handle application commands: (`interactionCreate.ts`)
 
 ```ts
-import { eventshandler, cmdshandler } from '../index';
+import { eventshandler, commandshandler } from '../index';
 
 export default new eventshandler.event({
     event: 'interactionCreate',
     run: (client, interaction) => {
         if (!interaction.isChatInputCommand()) return;
 
-        const command = cmdshandler.collection.get(interaction.commandName);
+        const command = commandshandler.collection.get(interaction.commandName);
 
         if (!command || command.type !== 1) return;
 
@@ -374,7 +376,11 @@ export default new cmdshandler.command({
 
 ### Add components or commands without creating a file:
 
-> **Note** The difference between **add** and **set** that the first one (**add**) will set more keys in the collection, even overwrites the old key's data. The other one (**set**) will clear the entire collection and then adds the commands/components in the collection.
+> **Note**
+> The difference between **add** and **set** that the first one (**add**) will set more keys in the collection, even overwrites the old key's data. The other one (**set**) will clear the entire collection and then adds the commands/components in the collection.
+
+> **Warning**
+> Even if you're not providing files for the handler and using these methods, you **must** at least create one file that actually exist with it's valid directory path.
 
 ```ts
 [commands handler].addCommands(
@@ -382,7 +388,8 @@ export default new cmdshandler.command({
         type: ...,
         structure: ...,
         run: (...) => ...
-    }, ...
+    },
+    ...
 );
 
 [commands handler].setCommands(
@@ -390,7 +397,8 @@ export default new cmdshandler.command({
         type: ...,
         structure: ...,
         run: (...) => ...
-    }, ...
+    },
+    ...
 );
 
 [components handler].addComponents(
@@ -398,7 +406,8 @@ export default new cmdshandler.command({
         type: ...,
         customId: ...,
         run: (...) => ...
-    }, ...
+    },
+    ...
 );
 
 [components handler].setComponents(
@@ -406,7 +415,8 @@ export default new cmdshandler.command({
         type: ...,
         customId: ...,
         run: (...) => ...
-    }, ...
+    },
+    ...
 );
 ```
 

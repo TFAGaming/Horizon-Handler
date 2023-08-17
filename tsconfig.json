@@ -21,7 +21,8 @@
             "src/",
         ],
         "exclude": [
-            "src/types.ts"
+            "src/types.ts",
+            "src/core/utils/index.ts"
         ],
         "theme": ["my-theme"],
         "out": "docs",

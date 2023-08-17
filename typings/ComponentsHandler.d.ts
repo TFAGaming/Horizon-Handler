@@ -8,9 +8,7 @@ export declare class ComponentsHandler<C extends Client> extends EventEmitter {
     readonly includesDir?: boolean;
 
     /**
-     * Creates a new handler for Discord bot client's events.
-     *
-     * **Note**: This handler doesn't support custom events names, they all must be from the enum `ClientEvents`.
+     * Creates a new handler for Discord bot client's interaction components events.
      * @param {string} path The directory path.
      * @param {boolean | undefined} includesDir Whenever the directory has sub-dirs or not.
      * @typeParam {Client} C The Discord bot Client.
@@ -35,7 +33,8 @@ export declare class ComponentsHandler<C extends Client> extends EventEmitter {
             readonly type: 2 | 1 | 3 | 4 | 5 | 6 | 7;
             readonly customId: string;
             readonly run: ((client: C, interaction: import("discord.js").ButtonInteraction<import("discord.js").CacheType>) => void | PromiseLike<void>) | ((client: C, interaction: import("discord.js").StringSelectMenuInteraction<import("discord.js").CacheType>) => void | PromiseLike<void>) | ((client: C, interaction: import("discord.js").UserSelectMenuInteraction<import("discord.js").CacheType>) => void | PromiseLike<void>) | ((client: C, interaction: import("discord.js").RoleSelectMenuInteraction<import("discord.js").CacheType>) => void | PromiseLike<void>) | ((client: C, interaction: import("discord.js").MentionableSelectMenuInteraction<import("discord.js").CacheType>) => void | PromiseLike<void>) | ((client: C, interaction: import("discord.js").ChannelSelectMenuInteraction<import("discord.js").CacheType>) => void | PromiseLike<void>) | ((client: C, interaction: import("discord.js").ModalSubmitInteraction<import("discord.js").CacheType>) => void | PromiseLike<void>);
-        
+            readonly disabled?: boolean;
+
             toJSON(): ComponentStructure<C>;
         };
     };

@@ -10,7 +10,7 @@ export class CommandsHandler<C extends Client, O = {}, A extends any[] = unknown
     public readonly includesDir?: boolean = false;
 
     /**
-     * Creates a new handler for Discord bot client's events.
+     * Creates a new handler for Discord API interaction application commands.
      * @param {string} path The directory path.
      * @param {boolean | undefined} includesDir Whenever the directory has sub-dirs or not.
      * @typeParam {Client} C The Discord bot Client.
@@ -94,7 +94,7 @@ export class CommandsHandler<C extends Client, O = {}, A extends any[] = unknown
     };
 
     /**
-     * Loads all events from the provided path.
+     * Loads all commands from the provided path.
      */
     public load(): Promise<CommandStructure<C, O, A>[]> {
         return new Promise(async (resolved, rejected) => {
@@ -104,7 +104,7 @@ export class CommandsHandler<C extends Client, O = {}, A extends any[] = unknown
                 });
 
                 for (const command of data) {
-                    if (!command.structure || !command.run || !command.type) {
+                    if (!command.structure || !command.run || !command.type || command.disabled) {
                         this.emit('fileSkip', command.structure);
 
                         continue;
@@ -123,7 +123,7 @@ export class CommandsHandler<C extends Client, O = {}, A extends any[] = unknown
     };
 
     /**
-     * Reloads all events from the provided path.
+     * Reloads all commands from the provided path.
      */
     public reload(): Promise<CommandStructure<C, O, A>[]> {
         return new Promise(async (resolved, rejected) => {

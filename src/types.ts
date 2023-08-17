@@ -39,6 +39,7 @@ export interface CommandStructureChatInput<C extends Client<true>, O = {}, A ext
     options?: Partial<O>;
     run: (client: C, interaction: ChatInputCommandInteraction, ...args: A) => Awaitable<void>;
     autocomplete?: (client: C, interaction: AutocompleteInteraction, ...args: A) => Awaitable<void>;
+    disabled?: boolean;
 };
 
 export interface CommandStructureUserContext<C extends Client<true>, O = {}, A extends any[] = unknown[]> {
@@ -46,7 +47,8 @@ export interface CommandStructureUserContext<C extends Client<true>, O = {}, A e
     structure: ContextMenuCommandBuilder;
     options?: Partial<O>;
     run: (client: C, interaction: UserContextMenuCommandInteraction, ...args: A) => Awaitable<void>;
-    autocomplete?: () => never;
+    autocomplete?: never;
+    disabled?: boolean;
 };
 
 export interface CommandStructureMessageContext<C extends Client<true>, O = {}, A extends any[] = unknown[]> {
@@ -54,7 +56,8 @@ export interface CommandStructureMessageContext<C extends Client<true>, O = {}, 
     structure: ContextMenuCommandBuilder;
     options?: Partial<O>;
     run: (client: C, interaction: MessageContextMenuCommandInteraction, ...args: A) => Awaitable<void>;
-    autocomplete?: () => never;
+    autocomplete?: never;
+    disabled?: boolean;
 };
 
 export type CommandStructure<C extends Client<true>, O = {}, A extends any[] = unknown[]> =
@@ -89,43 +92,50 @@ export enum ComponentType {
 export interface ComponentStructureButton<C extends Client<true>> {
     type: 1,
     customId: string,
-    run: (client: C, interaction: ButtonInteraction) => Awaitable<void>
+    run: (client: C, interaction: ButtonInteraction) => Awaitable<void>,
+    disabled?: boolean
 };
 
 export interface ComponentStructureStringSelect<C extends Client<true>> {
     type: 2,
     customId: string,
-    run: (client: C, interaction: StringSelectMenuInteraction) => Awaitable<void>
+    run: (client: C, interaction: StringSelectMenuInteraction) => Awaitable<void>,
+    disabled?: boolean
 };
 
 export interface ComponentStructureUserSelect<C extends Client<true>> {
     type: 3,
     customId: string,
-    run: (client: C, interaction: UserSelectMenuInteraction) => Awaitable<void>
+    run: (client: C, interaction: UserSelectMenuInteraction) => Awaitable<void>,
+    disabled?: boolean
 };
 
 export interface ComponentStructureRoleSelect<C extends Client<true>> {
     type: 4,
     customId: string,
-    run: (client: C, interaction: RoleSelectMenuInteraction) => Awaitable<void>
+    run: (client: C, interaction: RoleSelectMenuInteraction) => Awaitable<void>,
+    disabled?: boolean
 };
 
 export interface ComponentStructureMentionableSelect<C extends Client<true>> {
     type: 5,
     customId: string,
-    run: (client: C, interaction: MentionableSelectMenuInteraction) => Awaitable<void>
+    run: (client: C, interaction: MentionableSelectMenuInteraction) => Awaitable<void>,
+    disabled?: boolean
 };
 
 export interface ComponentStructureChannelSelect<C extends Client<true>> {
     type: 6,
     customId: string,
-    run: (client: C, interaction: ChannelSelectMenuInteraction) => Awaitable<void>
+    run: (client: C, interaction: ChannelSelectMenuInteraction) => Awaitable<void>,
+    disabled?: boolean
 };
 
 export interface ComponentStructureModalSubmit<C extends Client<true>> {
     type: 7,
     customId: string,
-    run: (client: C, interaction: ModalSubmitInteraction) => Awaitable<void>
+    run: (client: C, interaction: ModalSubmitInteraction) => Awaitable<void>,
+    disabled?: boolean
 };
 
 export type ComponentStructure<C extends Client<true>> =
