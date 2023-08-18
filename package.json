@@ -1,6 +1,6 @@
 {
   "name": "horizon-handler",
-  "version": "1.6.0-pre-2",
+  "version": "1.6.0",
   "description": "A powerful Discord bot commands and events handler, fully written in TypeScript.",
   "main": "lib/index.js",
   "typings": "typings/index.d.ts",
