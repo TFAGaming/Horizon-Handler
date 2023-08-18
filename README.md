@@ -1,6 +1,4 @@
-<img src="https://raw.githubusercontent.com/TFAGaming/Horizon-Handler/main/assets/icon.png">
-
-# Horizon Handler
+# <img src="https://raw.githubusercontent.com/TFAGaming/Horizon-Handler/main/assets/icon.png" width=20> Horizon Handler
 A powerful Discord bot commands, events, and components handler, fully written in TypeScript and has many typings features. Horizon Handler provides simple Discord application commands handler, supports custom options and custom arguments for listeners.
 
 > **Important**
@@ -428,8 +426,6 @@ Need any help? Join our Discord server, report to us the problem, and we will so
 <a href="https://discord.gg/E6VFACWu5V">
     <img src="https://discord.com/api/guilds/918611797194465280/widget.png?style=banner3">
 </a>
-
-<img src="">
 
 [↑ Table of Contents](#table-of-contents)
 
