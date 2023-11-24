@@ -69,15 +69,15 @@ export class ComponentsHandler<C extends Client> extends EventEmitter {
                         if (!(client instanceof Client)) throw new TypeError('client is not instance of Client.');
 
                         client.on('interactionCreate', async (interaction) => {
-                            if (interaction.isButton() && module.type === 1 && interaction.customId === module.customId) module.run(client, interaction);
+                            if (interaction.isButton() && module.type === 1 && module.useMatch ? interaction.customId.match(module.customId) : interaction.customId === module.customId) module.run(client, interaction);
 
-                            if (interaction.isStringSelectMenu() && module.type === 2 && interaction.customId === module.customId) module.run(client, interaction);
-                            if (interaction.isUserSelectMenu() && module.type === 3 && interaction.customId === module.customId) module.run(client, interaction);
-                            if (interaction.isRoleSelectMenu() && module.type === 4 && interaction.customId === module.customId) module.run(client, interaction);
-                            if (interaction.isMentionableSelectMenu() && module.type === 5 && interaction.customId === module.customId) module.run(client, interaction);
-                            if (interaction.isChannelSelectMenu() && module.type === 6 && interaction.customId === module.customId) module.run(client, interaction);
+                            if (interaction.isStringSelectMenu() && module.type === 2 && module.useMatch ? interaction.customId.match(module.customId) : interaction.customId === module.customId) module.run(client, interaction);
+                            if (interaction.isUserSelectMenu() && module.type === 3 && module.useMatch ? interaction.customId.match(module.customId) : interaction.customId === module.customId) module.run(client, interaction);
+                            if (interaction.isRoleSelectMenu() && module.type === 4 && module.useMatch ? interaction.customId.match(module.customId) : interaction.customId === module.customId) module.run(client, interaction);
+                            if (interaction.isMentionableSelectMenu() && module.type === 5 && module.useMatch ? interaction.customId.match(module.customId) : interaction.customId === module.customId) module.run(client, interaction);
+                            if (interaction.isChannelSelectMenu() && module.type === 6 && module.useMatch ? interaction.customId.match(module.customId) : interaction.customId === module.customId) module.run(client, interaction);
 
-                            if (interaction.isModalSubmit() && module.type === 7 && interaction.customId === module.customId) module.run(client, interaction);
+                            if (interaction.isModalSubmit() && module.type === 7 && module.useMatch ? interaction.customId.match(module.customId) : interaction.customId === module.customId) module.run(client, interaction);
                         });
                     };
 
