@@ -19,7 +19,7 @@ export const importFromDir = async <T>(path: string, options?: { includesDir?: b
                     } else {
                         const fileExtension = extname(file);
 
-                        if (fileExtension === '.js' || fileExtension === '.cjs') {
+                        if (fileExtension === '.js' || fileExtension === '.cjs' || fileExtension === '.ts') {
                             const url = resolve("./", `${filePath}${filePath.endsWith("/") ? "" : "/"}`);
 
                             const fileData = require(url);
@@ -35,7 +35,7 @@ export const importFromDir = async <T>(path: string, options?: { includesDir?: b
                     const filePath = join(directoryPath, file);
                     const fileExtension = extname(file);
 
-                    if (fileExtension === '.js' || fileExtension === '.cjs') {
+                    if (fileExtension === '.js' || fileExtension === '.cjs' || fileExtension === '.ts') {
                         const url = resolve("./", `${filePath}${filePath.endsWith("/") ? "" : "/"}`);
 
                         const fileData = require(url);
