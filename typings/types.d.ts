@@ -93,49 +93,56 @@ export interface ComponentStructureButton<C extends Client<true>> {
     type: 1,
     customId: string,
     run: (client: C, interaction: ButtonInteraction) => Awaitable<void>,
-    disabled?: boolean
+    disabled?: boolean,
+    useMatch?: boolean
 }
 
 export interface ComponentStructureStringSelect<C extends Client<true>> {
     type: 2,
     customId: string,
     run: (client: C, interaction: StringSelectMenuInteraction) => Awaitable<void>,
-    disabled?: boolean
+    disabled?: boolean,
+    useMatch?: boolean
 }
 
 export interface ComponentStructureUserSelect<C extends Client<true>> {
     type: 3,
     customId: string,
     run: (client: C, interaction: UserSelectMenuInteraction) => Awaitable<void>,
-    disabled?: boolean
+    disabled?: boolean,
+    useMatch?: boolean
 }
 
 export interface ComponentStructureRoleSelect<C extends Client<true>> {
     type: 4,
     customId: string,
     run: (client: C, interaction: RoleSelectMenuInteraction) => Awaitable<void>,
-    disabled?: boolean
+    disabled?: boolean,
+    useMatch?: boolean
 }
 
 export interface ComponentStructureMentionableSelect<C extends Client<true>> {
     type: 5,
     customId: string,
     run: (client: C, interaction: MentionableSelectMenuInteraction) => Awaitable<void>,
-    disabled?: boolean
+    disabled?: boolean,
+    useMatch?: boolean
 }
 
 export interface ComponentStructureChannelSelect<C extends Client<true>> {
     type: 6,
     customId: string,
     run: (client: C, interaction: ChannelSelectMenuInteraction) => Awaitable<void>,
-    disabled?: boolean
+    disabled?: boolean,
+    useMatch?: boolean
 }
 
 export interface ComponentStructureModalSubmit<C extends Client<true>> {
     type: 7,
     customId: string,
     run: (client: C, interaction: ModalSubmitInteraction) => Awaitable<void>,
-    disabled?: boolean
+    disabled?: boolean,
+    useMatch?: boolean
 }
 
 export type ComponentStructure<C extends Client<true>> =
