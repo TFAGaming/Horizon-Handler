@@ -63,29 +63,31 @@ export class ComponentsHandler<C extends Client> extends EventEmitter {
                         continue;
                     };
 
-                    if (defaultListener) {
-                        const client = defaultListener;
-
-                        if (!(client instanceof Client)) throw new TypeError('client is not instance of Client.');
-
-                        client.on('interactionCreate', async (interaction) => {
-                            if (interaction.isButton() && module.type === 1 && (module.useMatch ? interaction.customId.match(module.customId) : interaction.customId === module.customId)) module.run(client, interaction);
-
-                            if (interaction.isStringSelectMenu() && module.type === 2 && (module.useMatch ? interaction.customId.match(module.customId) : interaction.customId === module.customId)) module.run(client, interaction);
-                            if (interaction.isUserSelectMenu() && module.type === 3 && (module.useMatch ? interaction.customId.match(module.customId) : interaction.customId === module.customId)) module.run(client, interaction);
-                            if (interaction.isRoleSelectMenu() && module.type === 4 && (module.useMatch ? interaction.customId.match(module.customId) : interaction.customId === module.customId)) module.run(client, interaction);
-                            if (interaction.isMentionableSelectMenu() && module.type === 5 && (module.useMatch ? interaction.customId.match(module.customId) : interaction.customId === module.customId)) module.run(client, interaction);
-                            if (interaction.isChannelSelectMenu() && module.type === 6 && (module.useMatch ? interaction.customId.match(module.customId) : interaction.customId === module.customId)) module.run(client, interaction);
-
-                            if (interaction.isModalSubmit() && module.type === 7 && (module.useMatch ? interaction.customId.match(module.customId) : interaction.customId === module.customId)) module.run(client, interaction);
-                        });
-                    };
-
+                    
                     this.collection.set(module.customId, module);
-
+                    
                     this.emit('fileLoad', module.customId, module.type);
                 };
+                
+                if (defaultListener) {
+                    const client = defaultListener;
 
+                    if (!(client instanceof Client)) throw new TypeError('client is not instance of Client.');
+
+                    client.on('interactionCreate', async (interaction) => {
+                        for (const [_, module] of this.collection) {
+                            if (interaction.isButton() && module.type === 1 && (module.useMatch ? interaction.customId.match(module.customId) : interaction.customId === module.customId)) module.run(client, interaction);
+
+                        if (interaction.isStringSelectMenu() && module.type === 2 && (module.useMatch ? interaction.customId.match(module.customId) : interaction.customId === module.customId)) module.run(client, interaction);
+                        if (interaction.isUserSelectMenu() && module.type === 3 && (module.useMatch ? interaction.customId.match(module.customId) : interaction.customId === module.customId)) module.run(client, interaction);
+                        if (interaction.isRoleSelectMenu() && module.type === 4 && (module.useMatch ? interaction.customId.match(module.customId) : interaction.customId === module.customId)) module.run(client, interaction);
+                        if (interaction.isMentionableSelectMenu() && module.type === 5 && (module.useMatch ? interaction.customId.match(module.customId) : interaction.customId === module.customId)) module.run(client, interaction);
+                        if (interaction.isChannelSelectMenu() && module.type === 6 && (module.useMatch ? interaction.customId.match(module.customId) : interaction.customId === module.customId)) module.run(client, interaction);
+
+                        if (interaction.isModalSubmit() && module.type === 7 && (module.useMatch ? interaction.customId.match(module.customId) : interaction.customId === module.customId)) module.run(client, interaction);
+                        }
+                    });
+                };
                 resolved(data);
             } catch (e) {
                 rejected(e);
